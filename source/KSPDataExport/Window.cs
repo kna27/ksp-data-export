@@ -8,12 +8,12 @@ namespace KSPDataExport
         public bool showGUI = false;
         bool showLoggedVals = false;
         Rect windowRect = new Rect(150, 100, 275, 300);
-        Rect loggedValsRect = new Rect(150, 100, 225, 300);
+        Rect loggedValsRect = new Rect(150, 100, 225, 760);
         Rect buttonRect = new Rect(50, 25, 175, 25);
         Rect infoRect = new Rect(12.5f, 60, 250, 20);
-        Rect valRect = new Rect(10, 60, 175, 20);
+        Rect valRect = new Rect(10, 30, 175, 20);
         Rect headerMainRect = new Rect(87.5f, 110, 100, 22);
-        Rect headerRect = new Rect(62.5f, 110, 100, 22);
+        Rect headerRect = new Rect(62.5f, 30, 100, 20);
         Rect inptRect = new Rect(112.5f, 140, 50, 20);
         bool wasLoggingStoppedByIncorrectLogRateValue = false;
         public string onText;
@@ -74,16 +74,59 @@ namespace KSPDataExport
             {
                 showLoggedVals = false;
             }
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 0, headerRect.width, headerRect.height), "Vessel");
+            GUI.Box(new Rect(valRect.x, valRect.y + 25, valRect.width, valRect.height), "Velocity", valStyle);
+            Vals.logVelocity = GUI.Toggle(new Rect(200, 55, 12.5f, 12.5f), Vals.logVelocity, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 50, valRect.width, valRect.height), "G-Force", valStyle);
+            Vals.logGForce = GUI.Toggle(new Rect(200, 80, 12.5f, 12.5f), Vals.logGForce, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 75, valRect.width, valRect.height), "Acceleration", valStyle);
+            Vals.logAcceleration = GUI.Toggle(new Rect(200, 105, 12.5f, 12.5f), Vals.logAcceleration, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 100, valRect.width, valRect.height), "Thrust", valStyle);
+            Vals.logThrust = GUI.Toggle(new Rect(200, 130, 12.5f, 12.5f), Vals.logThrust, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 125, valRect.width, valRect.height), "TWR", valStyle);
+            Vals.logTWR = GUI.Toggle(new Rect(200, 155, 12.5f, 12.5f), Vals.logTWR, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 150, valRect.width, valRect.height), "Mass", valStyle);
+            Vals.logMass = GUI.Toggle(new Rect(200, 180, 12.5f, 12.5f), Vals.logMass, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 175, valRect.width, valRect.height), "Pitch", valStyle);
+            Vals.logPitch = GUI.Toggle(new Rect(200, 205, 12.5f, 12.5f), Vals.logPitch, "");
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 200, headerRect.width, headerRect.height), "Position");
+            GUI.Box(new Rect(valRect.x, valRect.y + 225, valRect.width, valRect.height), "Altitude From Terrain", valStyle);
+            Vals.logAltTer = GUI.Toggle(new Rect(200, 255, 12.5f, 12.5f), Vals.logAltTer, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 250, valRect.width, valRect.height), "Altitude From Sea", valStyle);
+            Vals.logAltSea = GUI.Toggle(new Rect(200, 280, 12.5f, 12.5f), Vals.logAltSea, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 275, valRect.width, valRect.height), "Downrange Distance", valStyle);
+            Vals.logDownrangeDist = GUI.Toggle(new Rect(200, 305, 12.5f, 12.5f), Vals.logDownrangeDist, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 300, valRect.width, valRect.height), "Latitude", valStyle);
+            Vals.logLat = GUI.Toggle(new Rect(200, 330, 12.5f, 12.5f), Vals.logLat, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 325, valRect.width, valRect.height), "Longitude", valStyle);
+            Vals.logLon = GUI.Toggle(new Rect(200, 355, 12.5f, 12.5f), Vals.logLon, "");
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 350, headerRect.width, headerRect.height), "Orbit");
+            GUI.Box(new Rect(valRect.x, valRect.y + 375, valRect.width, valRect.height), "Apoapsis", valStyle);
+            Vals.logAp = GUI.Toggle(new Rect(200, 405, 12.5f, 12.5f), Vals.logAp, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 400, valRect.width, valRect.height), "Periapsis", valStyle);
+            Vals.logPe = GUI.Toggle(new Rect(200, 430, 12.5f, 12.5f), Vals.logPe, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 425, valRect.width, valRect.height), "Inclination", valStyle);
+            Vals.logInc = GUI.Toggle(new Rect(200, 455, 12.5f, 12.5f), Vals.logInc, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 450, valRect.width, valRect.height), "Orbital Velocity", valStyle);
+            Vals.logOrbVel = GUI.Toggle(new Rect(200, 480, 12.5f, 12.5f), Vals.logOrbVel, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 475, valRect.width, valRect.height), "Gravity", valStyle);
+            Vals.logGravity = GUI.Toggle(new Rect(200, 505, 12.5f, 12.5f), Vals.logGravity, "");
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 500, headerRect.width, headerRect.height), "Target");
+            GUI.Box(new Rect(valRect.x, valRect.y + 525, valRect.width, valRect.height), "Target Distance", valStyle);
+            Vals.logTargDist = GUI.Toggle(new Rect(200, 555, 12.5f, 12.5f), Vals.logTargDist, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 550, valRect.width, valRect.height), "Target Velocity", valStyle);
+            Vals.logTargVel = GUI.Toggle(new Rect(200, 580, 12.5f, 12.5f), Vals.logTargVel, "");
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 575, headerRect.width, headerRect.height), "Resources");
+            GUI.Box(new Rect(valRect.x, valRect.y + 600, valRect.width, valRect.height), "Stage DeltaV", valStyle);
+            Vals.logStageDV = GUI.Toggle(new Rect(200, 630, 12.5f, 12.5f), Vals.logStageDV, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 625, valRect.width, valRect.height), "Vessel DeltaV", valStyle);
+            Vals.logVesselDV = GUI.Toggle(new Rect(200, 655, 12.5f, 12.5f), Vals.logVesselDV, "");
+            GUI.Box(new Rect(headerRect.x, headerRect.y + 650, headerRect.width, headerRect.height), "Science");
+            GUI.Box(new Rect(valRect.x, valRect.y + 675, valRect.width, valRect.height), "Pressure", valStyle);
+            Vals.logPressure = GUI.Toggle(new Rect(200, 705, 12.5f, 12.5f), Vals.logPressure, "");
+            GUI.Box(new Rect(valRect.x, valRect.y + 700, valRect.width, valRect.height), "Temperature", valStyle);
+            Vals.logTemperature = GUI.Toggle(new Rect(200, 730, 12.5f, 12.5f), Vals.logTemperature, "");
 
-
-            GUI.Box(new Rect(headerRect.x, headerRect.y - 80, headerRect.width, headerRect.height), "Vessel");
-
-            GUI.Box(valRect, "Velocity", valStyle);
-            Vals.logVelocity = GUI.Toggle(new Rect(200, 60, 12.5f, 12.5f), Vals.logVelocity, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 25, valRect.width, valRect.height), "Acceleration", valStyle);
-            Vals.logAcceleration = GUI.Toggle(new Rect(200, 85, 12.5f, 12.5f), Vals.logAcceleration, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 50, valRect.width, valRect.height), "Apoapsis", valStyle);
-            Vals.logAp = GUI.Toggle(new Rect(200, 110, 12.5f, 12.5f), Vals.logAp, "");
 
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));
         }
