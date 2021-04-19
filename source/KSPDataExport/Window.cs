@@ -83,7 +83,7 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 25, valRect.width, valRect.height), "Acceleration", valStyle);
             Vals.logAcceleration = GUI.Toggle(new Rect(200, 85, 12.5f, 12.5f), Vals.logAcceleration, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 50, valRect.width, valRect.height), "Apoapsis", valStyle);
-            Vals.logApoapsis = GUI.Toggle(new Rect(200, 110, 12.5f, 12.5f), Vals.logApoapsis, "");
+            Vals.logAp = GUI.Toggle(new Rect(200, 110, 12.5f, 12.5f), Vals.logAp, "");
 
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));
         }
@@ -116,7 +116,7 @@ namespace KSPDataExport
             }
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 230, buttonRect.width, buttonRect.height), "Help", buttonStyle))
             {
-                Application.OpenURL("https://github.com/kna27/ksp-mission-kontrol/wiki/How-To-Use");
+                Application.OpenURL("https://github.com/kna27/ksp-data-export");
             }
             if(!float.TryParse(logRate, out float f))
             {
