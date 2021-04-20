@@ -1,34 +1,34 @@
 //Vessel
 logVelocity=True
 logGForce=True
-logAcceleration=True
-logThrust=True
-logTWR=True
-logMass=True
-logPitch=True
+logAcceleration=False
+logThrust=False
+logTWR=False
+logMass=False
+logPitch=False
 
 //Position
-logAltTer=True
+logAltTer=False
 logAltSea=True
-logDownrangeDist=True
-logLat=True
-logLon=True
+logDownrangeDist=False
+logLat=False
+logLon=False
 
 //Orbit
 logAp=True
-logPe=True
+logPe=False
 logInc=True
-logOrbVel=True
-logGravity=True
+logOrbVel=False
+logGravity=False
 
 //Target
-logTargDist=True
-logTargVel=True
+logTargDist=False
+logTargVel=False
 
 //Resources
-logStageDV=True
+logStageDV=False
 logVesselDV=True
 
 //Science
-logPressure=True
-logTemperature=True
+logPressure=False
+logTemperature=False

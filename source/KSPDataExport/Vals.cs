@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿//Container of whether or not to log values
+
+using UnityEngine;
 
 namespace KSPDataExport
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class Vals : MonoBehaviour
     {
+        //The main bools
         public static bool logVelocity;
         public static bool logGForce;
         public static bool logAcceleration;
@@ -34,6 +37,7 @@ namespace KSPDataExport
         public static bool logPressure;
         public static bool logTemperature;
 
+        //Whether each main bool has ever been set to true
         public static bool everLogVelocity;
         public static bool everLogGForce;
         public static bool everLogAcceleration;
@@ -63,7 +67,7 @@ namespace KSPDataExport
         public static bool everLogPressure;
         public static bool everLogTemperature;
 
-
+        //Temporary bools to check for changes
         private static bool tempLogVelocity;
         private static bool tempLogGForce;
         private static bool tempLogAcceleration;
@@ -95,6 +99,7 @@ namespace KSPDataExport
 
         void Start()
         {
+            //Get the value of all of the bools
             everLogVelocity = logVelocity = LoadVals.GetValue(DataExport.cfgPath, "logVelocity");
             everLogGForce = logGForce = LoadVals.GetValue(DataExport.cfgPath, "logGForce");
             everLogAcceleration = logAcceleration = LoadVals.GetValue(DataExport.cfgPath, "logAcceleration");
@@ -122,8 +127,10 @@ namespace KSPDataExport
 
         void Update()
         {
+            //If any of the bools have changed
             if (tempLogVelocity != logVelocity || tempLogGForce != logGForce || tempLogAcceleration != logAcceleration || tempLogThrust != logThrust || tempLogTWR != logTWR || tempLogMass != logMass || tempLogPitch != logPitch || tempLogAltTer != logAltTer || tempLogAltSea != logAltSea || tempLogDownrangeDist != logDownrangeDist || tempLogLat != logLat || tempLogLon != logLon || tempLogAp != logAp || tempLogPe != logPe || tempLogInc != logInc || tempLogOrbVel != logOrbVel || tempLogGravity != logGravity || tempLogTargDist != logTargDist || tempLogTargVel != logTargVel || tempLogStageDV != logStageDV || tempLogVesselDV != logVesselDV || tempLogPressure != logPressure || tempLogTemperature != logTemperature)
             {
+                //Change the 'ever' bools if needed
                 everLogVelocity = logVelocity ? logVelocity : everLogVelocity;
                 everLogGForce = logGForce ? logGForce : everLogGForce;
                 everLogAcceleration = logAcceleration ? logAcceleration : everLogAcceleration;
@@ -148,6 +155,7 @@ namespace KSPDataExport
                 everLogPressure = logPressure ? logPressure : everLogPressure;
                 everLogTemperature = logTemperature ? logTemperature : everLogTemperature;
 
+                //Write the new values of the bools to the file
                 LoadVals.SetValue(DataExport.cfgPath, "logVelocity", logVelocity);
                 LoadVals.SetValue(DataExport.cfgPath, "logGForce", logGForce);
                 LoadVals.SetValue(DataExport.cfgPath, "logAcceleration", logAcceleration);
@@ -173,6 +181,7 @@ namespace KSPDataExport
                 LoadVals.SetValue(DataExport.cfgPath, "logTemperature", logTemperature);
             }
 
+            //Set temporary bools to the current bool at the end of the frame
             tempLogVelocity = logVelocity;
             tempLogGForce = logGForce;
             tempLogAcceleration = logAcceleration;

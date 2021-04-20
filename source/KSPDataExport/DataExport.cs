@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Writing data to the CSV file
+
+using System;
 using UnityEngine;
 using System.IO;
 
@@ -10,12 +12,15 @@ namespace KSPDataExport
         public static string CSVpath;
         public static string dataPath = @"/GameData/DataExport/graphs/";
         public static string cfgPath = @"/GameData/DataExport/logged.vals";
+        public static string fileSize;
+        public static string CSVName;
+        static readonly string[] suffixes = { " Bytes", " KB", " MB" };
+
         public static bool isLogging;
         public static float waitTime = 1f;
         private int lastLoggedTime = 0;
+
         public static Vessel actVess;
-        public static string fileSize;
-        public static string CSVName;
         FileInfo fi;
 
         static int elapsedTime;
@@ -50,7 +55,6 @@ namespace KSPDataExport
 
         void Start()
         {
-
             actVess = FlightGlobals.ActiveVessel;
             CSVName = DateTime.Now.ToString("yyyyMMddHHmm") + ".csv";
             CSVpath = @"/GameData/DataExport/graphs/" + CSVName;
@@ -73,15 +77,17 @@ namespace KSPDataExport
             try
             {
                 fi = new FileInfo(CSVpath);
-                fileSize = FileSizeFormatter.FormatSize(fi.Length);
+                fileSize = DataExport.FormatSize(fi.Length);
             }
             catch
             {
                 fileSize = "0.0 Bytes";
             }
         }
+
         void FixedUpdate()
         {
+            //Create the CSV folder if it does not exist
             if (!Directory.Exists(dataPath))
             {
                 Directory.CreateDirectory(dataPath);
@@ -109,6 +115,7 @@ namespace KSPDataExport
                     }
                 }
             }
+            //Create the CSV file if we are logging
             if (!File.Exists(CSVpath) && isLogging)
             {
                 File.Create(CSVpath);
@@ -117,6 +124,7 @@ namespace KSPDataExport
             {
                 if (Mathf.RoundToInt((float)actVess.missionTime) >= lastLoggedTime + waitTime)
                 {
+                    //Setting the value of all variables
                     elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
 
                     srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
@@ -148,13 +156,14 @@ namespace KSPDataExport
                     pressure = Vals.logPressure ? String.Format("{0},", 8.ToString()) : Vals.everLogPressure ? "," : ""; //TODO
                     temp = Vals.everLogTemperature ? String.Format("{0},", 9.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
 
+                    //Write the variables to the file
                     AddData();
                     lastLoggedTime = Mathf.RoundToInt((float)actVess.missionTime);
                 }
                 try
                 {
                     fi = new FileInfo(CSVpath);
-                    fileSize = FileSizeFormatter.FormatSize(fi.Length);
+                    fileSize = DataExport.FormatSize(fi.Length);
                 }
                 catch
                 {
@@ -163,6 +172,7 @@ namespace KSPDataExport
             }
         }
 
+        //Adds the new line containing the values chosen to be logged to the file
         public static void AddData()
         {
             try
@@ -171,10 +181,12 @@ namespace KSPDataExport
                 {
                     try
                     {
+                        //Write a new line to the file
                         file.WriteLine(String.Format("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Debug.Log("Was unable to log data to file: " + e);
                     }
                 }
             }
@@ -184,6 +196,7 @@ namespace KSPDataExport
             }
         }
 
+        //Initializes the file and writes the headers
         static void InitFile()
         {
             File.Create(CSVpath);
@@ -201,32 +214,31 @@ namespace KSPDataExport
             }
         }
 
+        //Gets the distance between a lat/lon pair and the KSC
         private double Distance(double lat, double lon)
         {
             double distance = ((600 * Math.Acos((Math.Sin(-0.0016963029533) * Math.Sin(DegToRad(lat))) + Math.Cos(-0.0016963029533) * Math.Cos(DegToRad(lat)) * Math.Cos(DegToRad(lon) - -1.30127703355))));
             return (distance);
         }
+
+        //Converts degrees to radians (used in Distance)
         public static double DegToRad(double deg)
         {
             double radians = (Math.PI / 180) * deg;
             return (radians);
         }
-    }
-}
 
-public static class FileSizeFormatter
-{
-    static readonly string[] suffixes =
-    { " Bytes", " KB", " MB"};
-    public static string FormatSize(Int64 bytes)
-    {
-        int counter = 0;
-        decimal number = (decimal)bytes;
-        while (Math.Round(number / 1024) >= 1)
+        //Formats the file size of the CSV file
+        public static string FormatSize(Int64 bytes)
         {
-            number /= 1024;
-            counter++;
+            int counter = 0;
+            decimal number = (decimal)bytes;
+            while (Math.Round(number / 1024) >= 1)
+            {
+                number /= 1024;
+                counter++;
+            }
+            return string.Format("{0:n1}{1}", number, suffixes[counter]);
         }
-        return string.Format("{0:n1}{1}", number, suffixes[counter]);
     }
 }
