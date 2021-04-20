@@ -161,7 +161,7 @@ namespace KSPDataExport
             {
                 Application.OpenURL("https://github.com/kna27/ksp-data-export");
             }
-            if(!float.TryParse(logRate, out float f))
+            if (!float.TryParse(logRate, out float f))
             {
                 onText = "Turn On";
                 ScreenMessages.PostScreenMessage("Not a valid value! Logging paused.");

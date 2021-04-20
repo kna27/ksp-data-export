@@ -86,7 +86,7 @@ namespace KSPDataExport
             {
                 Directory.CreateDirectory(dataPath);
             }
-            else if(isLogging)
+            else if (isLogging)
             {
                 try
                 {
@@ -120,23 +120,23 @@ namespace KSPDataExport
                     elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
 
                     srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
-                    gForce = Vals.logGForce ? String.Format("{0}", Math.Round(actVess.geeForce, 2).ToString()) : Vals.everLogGForce ? "," : "";
+                    gForce = Vals.logGForce ? String.Format("{0},", Math.Round(actVess.geeForce, 2).ToString()) : Vals.everLogGForce ? "," : "";
                     acceleration = Vals.logAcceleration ? String.Format("{0},", Math.Round(actVess.acceleration.magnitude, 2).ToString()) : Vals.everLogAcceleration ? "," : "";
                     thrust = Vals.logThrust ? String.Format("{0},", 0.ToString()) : Vals.everLogThrust ? "," : ""; //TODO
                     TWR = Vals.logTWR ? String.Format("{0},", 1.ToString()) : Vals.everLogTWR ? "," : ""; //TODO
-                    mass = Vals.logMass ? String.Format("{0},", ((float)Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString()) : Vals.everLogMass ? "," : ""; //TEST
+                    mass = Vals.logMass ? String.Format("{0},", ((float)Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString()) : Vals.everLogMass ? "," : "";
                     pitch = Vals.logPitch ? String.Format("{0},", 2.ToString()) : Vals.everLogPitch ? "," : ""; //TODO
 
-                    altTer = Vals.logAltTer ? String.Format("{0},", Math.Round(FlightGlobals.ship_altitude, 2).ToString()) : Vals.everLogAltTer ? "," : ""; //TEST
-                    altSea = Vals.logAltSea ? String.Format("{0},", Math.Round(actVess.terrainAltitude, 2).ToString()) : Vals.everLogAltSea ? "," : ""; //TEST
-                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Distance(actVess.latitude, actVess.longitude), 2).ToString()) : Vals.everLogDownrangeDist ? "," : ""; //TEST
-                    lat = Vals.logLat ? String.Format("{0},", Math.Round(actVess.latitude, 2).ToString()) : Vals.everLogLat ? "," : ""; //TEST
-                    lon = Vals.logLon ? String.Format("{0},", Math.Round(actVess.longitude, 2).ToString()) : Vals.everLogLon ? "," : ""; //TEST
+                    altTer = Vals.logAltTer ? String.Format("{0},", Math.Round(FlightGlobals.ship_altitude, 2).ToString()) : Vals.everLogAltTer ? "," : "";
+                    altSea = Vals.logAltSea ? String.Format("{0},", Math.Round(actVess.terrainAltitude, 2).ToString()) : Vals.everLogAltSea ? "," : "";
+                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Distance(actVess.latitude, actVess.longitude), 2).ToString()) : Vals.everLogDownrangeDist ? "," : "";
+                    lat = Vals.logLat ? String.Format("{0},", Math.Round(actVess.latitude, 2).ToString()) : Vals.everLogLat ? "," : "";
+                    lon = Vals.logLon ? String.Format("{0},", Math.Round(actVess.longitude, 2).ToString()) : Vals.everLogLon ? "," : "";
 
-                    ap = Vals.logAp ? String.Format("{0}", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.ApA)).ToString()) : "";
-                    pe = Vals.logPe ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.PeA)).ToString()) : Vals.everLogPe ? "," : ""; //TEST
-                    inc = Vals.logInc ? String.Format("{0},", Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString()) : Vals.everLogInc ? "," : ""; //TEST
-                    orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : ""; //TEST
+                    ap = Vals.logAp ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.ApA)).ToString()) : "";
+                    pe = Vals.logPe ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.PeA)).ToString()) : Vals.everLogPe ? "," : "";
+                    inc = Vals.logInc ? String.Format("{0},", Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString()) : Vals.everLogInc ? "," : "";
+                    orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : "";
                     gravity = Vals.logGravity ? String.Format("{0},", 3.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
 
                     targDist = Vals.logTargDist ? String.Format("{0},", 4.ToString()) : Vals.everLogTargDist ? "," : ""; //TODO
@@ -144,7 +144,7 @@ namespace KSPDataExport
 
                     stageDV = Vals.logStageDV ? String.Format("{0},", 6.ToString()) : Vals.everLogStageDV ? "," : ""; //TODO
                     vesselDV = Vals.logVesselDV ? String.Format("{0},", 7.ToString()) : Vals.everLogVesselDV ? "," : ""; //TODO
-                    
+
                     pressure = Vals.logPressure ? String.Format("{0},", 8.ToString()) : Vals.everLogPressure ? "," : ""; //TODO
                     temp = Vals.everLogTemperature ? String.Format("{0},", 9.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
 
@@ -171,7 +171,7 @@ namespace KSPDataExport
                 {
                     try
                     {
-                        file.WriteLine(String.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
+                        file.WriteLine(String.Format("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
                     }
                     catch
                     {
