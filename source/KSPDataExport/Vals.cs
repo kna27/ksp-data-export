@@ -63,6 +63,36 @@ namespace KSPDataExport
         public static bool everLogPressure;
         public static bool everLogTemperature;
 
+
+        private static bool tempLogVelocity;
+        private static bool tempLogGForce;
+        private static bool tempLogAcceleration;
+        private static bool tempLogThrust;
+        private static bool tempLogTWR;
+        private static bool tempLogMass;
+        private static bool tempLogPitch;
+
+        private static bool tempLogAltTer;
+        private static bool tempLogAltSea;
+        private static bool tempLogDownrangeDist;
+        private static bool tempLogLat;
+        private static bool tempLogLon;
+
+        private static bool tempLogAp;
+        private static bool tempLogPe;
+        private static bool tempLogInc;
+        private static bool tempLogOrbVel;
+        private static bool tempLogGravity;
+
+        private static bool tempLogTargDist;
+        private static bool tempLogTargVel;
+
+        private static bool tempLogStageDV;
+        private static bool tempLogVesselDV;
+
+        private static bool tempLogPressure;
+        private static bool tempLogTemperature;
+
         void Start()
         {
             everLogVelocity = logVelocity = LoadVals.GetValue(DataExport.cfgPath, "logVelocity");
@@ -92,53 +122,80 @@ namespace KSPDataExport
 
         void Update()
         {
-            everLogVelocity = logVelocity ? logVelocity : everLogVelocity;
-            everLogGForce = logGForce ? logGForce : everLogGForce;
-            everLogAcceleration = logAcceleration ? logAcceleration : everLogAcceleration;
-            everLogThrust = logThrust ? logThrust : everLogThrust;
-            everLogTWR = logTWR ? logTWR : everLogTWR;
-            everLogMass = logMass ? logMass : everLogMass;
-            everLogPitch = logPitch ? logPitch : everLogPitch;
-            everLogAltTer = logAltTer ? logAltTer : everLogAltTer;
-            everLogAltSea = logAltSea ? logAltSea : everLogAltSea;
-            everLogDownrangeDist = logDownrangeDist ? logDownrangeDist : everLogDownrangeDist;
-            everLogLat = logLat ? logLat : everLogLat;
-            everLogLon = logLon ? logLon : everLogLon;
-            everLogAp = logAp ? logAp : everLogAp;
-            everLogPe = logPe ? logPe : everLogPe;
-            everLogInc = logInc ? logInc : everLogInc;
-            everLogOrbVel = logOrbVel ? logOrbVel : everLogOrbVel;
-            everLogGravity = logGravity ? logGravity : everLogGravity;
-            everLogTargDist = logTargDist ? logTargDist : everLogTargDist;
-            everLogTargVel = logTargVel ? logTargVel : everLogTargVel;
-            everLogStageDV = logStageDV ? logStageDV : everLogStageDV;
-            everLogVesselDV = logVesselDV ? logVesselDV : everLogVesselDV;
-            everLogPressure = logPressure ? logPressure : everLogPressure;
-            everLogTemperature = logTemperature ? logTemperature : everLogTemperature;
+            if (tempLogVelocity != logVelocity || tempLogGForce != logGForce || tempLogAcceleration != logAcceleration || tempLogThrust != logThrust || tempLogTWR != logTWR || tempLogMass != logMass || tempLogPitch != logPitch || tempLogAltTer != logAltTer || tempLogAltSea != logAltSea || tempLogDownrangeDist != logDownrangeDist || tempLogLat != logLat || tempLogLon != logLon || tempLogAp != logAp || tempLogPe != logPe || tempLogInc != logInc || tempLogOrbVel != logOrbVel || tempLogGravity != logGravity || tempLogTargDist != logTargDist || tempLogTargVel != logTargVel || tempLogStageDV != logStageDV || tempLogVesselDV != logVesselDV || tempLogPressure != logPressure || tempLogTemperature != logTemperature)
+            {
+                everLogVelocity = logVelocity ? logVelocity : everLogVelocity;
+                everLogGForce = logGForce ? logGForce : everLogGForce;
+                everLogAcceleration = logAcceleration ? logAcceleration : everLogAcceleration;
+                everLogThrust = logThrust ? logThrust : everLogThrust;
+                everLogTWR = logTWR ? logTWR : everLogTWR;
+                everLogMass = logMass ? logMass : everLogMass;
+                everLogPitch = logPitch ? logPitch : everLogPitch;
+                everLogAltTer = logAltTer ? logAltTer : everLogAltTer;
+                everLogAltSea = logAltSea ? logAltSea : everLogAltSea;
+                everLogDownrangeDist = logDownrangeDist ? logDownrangeDist : everLogDownrangeDist;
+                everLogLat = logLat ? logLat : everLogLat;
+                everLogLon = logLon ? logLon : everLogLon;
+                everLogAp = logAp ? logAp : everLogAp;
+                everLogPe = logPe ? logPe : everLogPe;
+                everLogInc = logInc ? logInc : everLogInc;
+                everLogOrbVel = logOrbVel ? logOrbVel : everLogOrbVel;
+                everLogGravity = logGravity ? logGravity : everLogGravity;
+                everLogTargDist = logTargDist ? logTargDist : everLogTargDist;
+                everLogTargVel = logTargVel ? logTargVel : everLogTargVel;
+                everLogStageDV = logStageDV ? logStageDV : everLogStageDV;
+                everLogVesselDV = logVesselDV ? logVesselDV : everLogVesselDV;
+                everLogPressure = logPressure ? logPressure : everLogPressure;
+                everLogTemperature = logTemperature ? logTemperature : everLogTemperature;
 
-            LoadVals.SetValue(DataExport.cfgPath, "logVelocity", logVelocity);
-            LoadVals.SetValue(DataExport.cfgPath, "logGForce", logGForce);
-            LoadVals.SetValue(DataExport.cfgPath, "logAcceleration", logAcceleration);
-            LoadVals.SetValue(DataExport.cfgPath, "logThrust", logThrust);
-            LoadVals.SetValue(DataExport.cfgPath, "logTWR", logTWR);
-            LoadVals.SetValue(DataExport.cfgPath, "logMass", logMass);
-            LoadVals.SetValue(DataExport.cfgPath, "logPitch", logPitch);
-            LoadVals.SetValue(DataExport.cfgPath, "logAltTer", logAltTer);
-            LoadVals.SetValue(DataExport.cfgPath, "logAltSea", logAltSea);
-            LoadVals.SetValue(DataExport.cfgPath, "logDownrangeDist", logDownrangeDist);
-            LoadVals.SetValue(DataExport.cfgPath, "logLat", logLat);
-            LoadVals.SetValue(DataExport.cfgPath, "logLon", logLon);
-            LoadVals.SetValue(DataExport.cfgPath, "logAp", logAp);
-            LoadVals.SetValue(DataExport.cfgPath, "logPe", logPe);
-            LoadVals.SetValue(DataExport.cfgPath, "logInc", logInc);
-            LoadVals.SetValue(DataExport.cfgPath, "logOrbVel", logOrbVel);
-            LoadVals.SetValue(DataExport.cfgPath, "logGravity", logGravity);
-            LoadVals.SetValue(DataExport.cfgPath, "logTargDist", logTargDist);
-            LoadVals.SetValue(DataExport.cfgPath, "logTargVel", logTargVel);
-            LoadVals.SetValue(DataExport.cfgPath, "logStageDV", logStageDV);
-            LoadVals.SetValue(DataExport.cfgPath, "logVesselDV", logVesselDV);
-            LoadVals.SetValue(DataExport.cfgPath, "logPressure", logPressure);
-            LoadVals.SetValue(DataExport.cfgPath, "logTemperature", logTemperature);
+                LoadVals.SetValue(DataExport.cfgPath, "logVelocity", logVelocity);
+                LoadVals.SetValue(DataExport.cfgPath, "logGForce", logGForce);
+                LoadVals.SetValue(DataExport.cfgPath, "logAcceleration", logAcceleration);
+                LoadVals.SetValue(DataExport.cfgPath, "logThrust", logThrust);
+                LoadVals.SetValue(DataExport.cfgPath, "logTWR", logTWR);
+                LoadVals.SetValue(DataExport.cfgPath, "logMass", logMass);
+                LoadVals.SetValue(DataExport.cfgPath, "logPitch", logPitch);
+                LoadVals.SetValue(DataExport.cfgPath, "logAltTer", logAltTer);
+                LoadVals.SetValue(DataExport.cfgPath, "logAltSea", logAltSea);
+                LoadVals.SetValue(DataExport.cfgPath, "logDownrangeDist", logDownrangeDist);
+                LoadVals.SetValue(DataExport.cfgPath, "logLat", logLat);
+                LoadVals.SetValue(DataExport.cfgPath, "logLon", logLon);
+                LoadVals.SetValue(DataExport.cfgPath, "logAp", logAp);
+                LoadVals.SetValue(DataExport.cfgPath, "logPe", logPe);
+                LoadVals.SetValue(DataExport.cfgPath, "logInc", logInc);
+                LoadVals.SetValue(DataExport.cfgPath, "logOrbVel", logOrbVel);
+                LoadVals.SetValue(DataExport.cfgPath, "logGravity", logGravity);
+                LoadVals.SetValue(DataExport.cfgPath, "logTargDist", logTargDist);
+                LoadVals.SetValue(DataExport.cfgPath, "logTargVel", logTargVel);
+                LoadVals.SetValue(DataExport.cfgPath, "logStageDV", logStageDV);
+                LoadVals.SetValue(DataExport.cfgPath, "logVesselDV", logVesselDV);
+                LoadVals.SetValue(DataExport.cfgPath, "logPressure", logPressure);
+                LoadVals.SetValue(DataExport.cfgPath, "logTemperature", logTemperature);
+            }
+
+            tempLogVelocity = logVelocity;
+            tempLogGForce = logGForce;
+            tempLogAcceleration = logAcceleration;
+            tempLogThrust = logThrust;
+            tempLogTWR = logTWR;
+            tempLogMass = logMass;
+            tempLogPitch = logPitch;
+            tempLogAltTer = logAltTer;
+            tempLogAltSea = logAltSea;
+            tempLogDownrangeDist = logDownrangeDist;
+            tempLogLat = logLat;
+            tempLogLon = logLon;
+            tempLogAp = logAp;
+            tempLogPe = logPe;
+            tempLogInc = logInc;
+            tempLogOrbVel = logOrbVel;
+            tempLogGravity = logGravity;
+            tempLogTargDist = logTargDist;
+            tempLogTargVel = logTargVel;
+            tempLogStageDV = logStageDV;
+            tempLogVesselDV = logVesselDV;
+            tempLogPressure = logPressure;
+            tempLogTemperature = logTemperature;
         }
     }
 }

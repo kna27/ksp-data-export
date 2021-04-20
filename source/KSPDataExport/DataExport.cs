@@ -86,7 +86,7 @@ namespace KSPDataExport
             {
                 Directory.CreateDirectory(dataPath);
             }
-            else
+            else if(isLogging)
             {
                 try
                 {
