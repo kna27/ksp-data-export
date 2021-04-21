@@ -89,9 +89,9 @@ namespace KSPDataExport
             Vals.logGForce = GUI.Toggle(new Rect(200, 80, 12.5f, 12.5f), Vals.logGForce, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 75, valRect.width, valRect.height), "Acceleration", valStyle);
             Vals.logAcceleration = GUI.Toggle(new Rect(200, 105, 12.5f, 12.5f), Vals.logAcceleration, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 100, valRect.width, valRect.height), "Thrust (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 100, valRect.width, valRect.height), "Thrust", valStyle);
             Vals.logThrust = GUI.Toggle(new Rect(200, 130, 12.5f, 12.5f), Vals.logThrust, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 125, valRect.width, valRect.height), "TWR (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 125, valRect.width, valRect.height), "TWR", valStyle);
             Vals.logTWR = GUI.Toggle(new Rect(200, 155, 12.5f, 12.5f), Vals.logTWR, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 150, valRect.width, valRect.height), "Mass", valStyle);
             Vals.logMass = GUI.Toggle(new Rect(200, 180, 12.5f, 12.5f), Vals.logMass, "");
@@ -125,9 +125,9 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 550, valRect.width, valRect.height), "Target Velocity (N/A WIP)", valStyle);
             Vals.logTargVel = GUI.Toggle(new Rect(200, 580, 12.5f, 12.5f), Vals.logTargVel, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 575, headerRect.width, headerRect.height), "Resources");
-            GUI.Box(new Rect(valRect.x, valRect.y + 600, valRect.width, valRect.height), "Stage DeltaV (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 600, valRect.width, valRect.height), "Stage DeltaV", valStyle);
             Vals.logStageDV = GUI.Toggle(new Rect(200, 630, 12.5f, 12.5f), Vals.logStageDV, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 625, valRect.width, valRect.height), "Vessel DeltaV (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 625, valRect.width, valRect.height), "Vessel DeltaV", valStyle);
             Vals.logVesselDV = GUI.Toggle(new Rect(200, 655, 12.5f, 12.5f), Vals.logVesselDV, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 650, headerRect.width, headerRect.height), "Science");
             GUI.Box(new Rect(valRect.x, valRect.y + 675, valRect.width, valRect.height), "Pressure (N/A WIP)", valStyle);
