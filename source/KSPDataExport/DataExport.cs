@@ -130,8 +130,8 @@ namespace KSPDataExport
                     srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
                     gForce = Vals.logGForce ? String.Format("{0},", Math.Round(actVess.geeForce, 2).ToString()) : Vals.everLogGForce ? "," : "";
                     acceleration = Vals.logAcceleration ? String.Format("{0},", Math.Round(actVess.acceleration.magnitude, 2).ToString()) : Vals.everLogAcceleration ? "," : "";
-                    thrust = Vals.logThrust ? String.Format("{0},", 0.ToString()) : Vals.everLogThrust ? "," : ""; //TODO
-                    TWR = Vals.logTWR ? String.Format("{0},", 1.ToString()) : Vals.everLogTWR ? "," : ""; //TODO
+                    thrust = Vals.logThrust ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2).ToString()) : Vals.everLogThrust ? "," : "";
+                    TWR = Vals.logTWR ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2).ToString()) : Vals.everLogTWR ? "," : "";
                     mass = Vals.logMass ? String.Format("{0},", ((float)Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString()) : Vals.everLogMass ? "," : "";
                     pitch = Vals.logPitch ? String.Format("{0},", 2.ToString()) : Vals.everLogPitch ? "," : ""; //TODO
 
@@ -150,8 +150,8 @@ namespace KSPDataExport
                     targDist = Vals.logTargDist ? String.Format("{0},", 4.ToString()) : Vals.everLogTargDist ? "," : ""; //TODO
                     targVel = Vals.logTargVel ? String.Format("{0},", 5.ToString()) : Vals.everLogTargVel ? "," : ""; //TODO
 
-                    stageDV = Vals.logStageDV ? String.Format("{0},", 6.ToString()) : Vals.everLogStageDV ? "," : ""; //TODO
-                    vesselDV = Vals.logVesselDV ? String.Format("{0},", 7.ToString()) : Vals.everLogVesselDV ? "," : ""; //TODO
+                    stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
+                    vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
 
                     pressure = Vals.logPressure ? String.Format("{0},", 8.ToString()) : Vals.everLogPressure ? "," : ""; //TODO
                     temp = Vals.everLogTemperature ? String.Format("{0},", 9.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
