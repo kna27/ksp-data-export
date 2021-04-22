@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using KSP.UI.Screens;
+using System.IO;
 
 namespace KSPDataExport
 {
@@ -9,13 +10,20 @@ namespace KSPDataExport
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class AppLauncher : MonoBehavior
 	{
-		private static string AppIconPath = @"C:/Test.png";
-		private static Texture2D AppIcon = GameDatabase.Instance.GetTexture(AppIconPath, false);
+		private static string AppIconPath = @"/GameData/DataExport/icon.png";
+		private static Texture2D AppIcon;
 
 		private ApplicationLauncherButton launcher;
 
 		public void Start()
 		{
+			if (!EventsHolder.alreadyStarted)
+			{
+				EventsHolder.appPath = Application.dataPath.Substring(0, Application.dataPath.Length - 13);
+				AppIconPath = EventsHolder.appPath + AppIconPath;
+				AppIcon ??= new Texture2D(36, 36);
+				ImageConversion.LoadImage(AppIcon, File.ReadAllBytes(AppIconPath));
+			}
 			GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
 			GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveLauncher);
 		}
