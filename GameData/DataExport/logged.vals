@@ -1,23 +1,23 @@
 //Vessel
-logVelocity=True
-logGForce=True
+logVelocity=False
+logGForce=False
 logAcceleration=False
 logThrust=False
 logTWR=False
 logMass=False
-logPitch=False
+logPitch=True
 
 //Position
 logAltTer=False
-logAltSea=True
+logAltSea=False
 logDownrangeDist=False
 logLat=False
 logLon=False
 
 //Orbit
-logAp=True
+logAp=False
 logPe=False
-logInc=True
+logInc=False
 logOrbVel=False
 logGravity=False
 
@@ -27,7 +27,7 @@ logTargVel=False
 
 //Resources
 logStageDV=False
-logVesselDV=True
+logVesselDV=False
 
 //Science
 logPressure=False

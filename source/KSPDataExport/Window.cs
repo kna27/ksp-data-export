@@ -7,8 +7,8 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class Window : MonoBehaviour
     {
-        public bool showGUI = false;
-        bool showLoggedVals = false;
+        public static bool showGUI = false;
+        public static bool showLoggedVals = false;
         bool wasLoggingStoppedByIncorrectLogRateValue = false;
 
         Rect windowRect = new Rect(150, 100, 275, 300);
