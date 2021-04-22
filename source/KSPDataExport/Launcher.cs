@@ -21,7 +21,7 @@ namespace KSPDataExport
 			{
 				EventsHolder.appPath = Application.dataPath.Substring(0, Application.dataPath.Length - 13);
 				AppIconPath = EventsHolder.appPath + AppIconPath;
-				AppIcon ??= new Texture2D(36, 36);
+				AppIcon ??= new Texture2D(32, 32);
 				ImageConversion.LoadImage(AppIcon, File.ReadAllBytes(AppIconPath));
 			}
 			GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
