@@ -40,16 +40,6 @@ namespace KSPDataExport
 
         }
 
-        void Update()
-        {
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.N))
-            {
-                showGUI = !showGUI;
-                showLoggedVals = false;
-            }
-
-        }
-
         void OnGUI()
         {
             buttonStyle = new GUIStyle("button");
