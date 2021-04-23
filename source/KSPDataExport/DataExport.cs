@@ -87,6 +87,7 @@ namespace KSPDataExport
 
         void FixedUpdate()
         {
+            
             //Create the CSV folder if it does not exist
             if (!Directory.Exists(dataPath))
             {
@@ -153,8 +154,8 @@ namespace KSPDataExport
                     stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
                     vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
 
-                    pressure = Vals.logPressure ? String.Format("{0},", 4.ToString()) : Vals.everLogPressure ? "," : ""; //TODO
-                    temp = Vals.everLogTemperature ? String.Format("{0},", 5.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
+                    pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString()) : Vals.everLogPressure ? "," : "";
+                    temp = Vals.logTemperature ? String.Format("{0},", Math.Round(actVess.atmosphericTemperature, 2).ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
 
                     //Write the variables to the file
                     AddData();
@@ -169,6 +170,7 @@ namespace KSPDataExport
                 {
                     fileSize = "0.0 Bytes";
                 }
+                ScreenMessages.PostScreenMessage(String.Format("Temp: {0}; logTemp: {1}; everLogTemp: {2}", temp, Vals.logTemperature.ToString(), Vals.everLogTemperature.ToString()));
             }
         }
 

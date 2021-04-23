@@ -120,7 +120,7 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 625, valRect.width, valRect.height), "Vessel DeltaV", valStyle);
             Vals.logVesselDV = GUI.Toggle(new Rect(200, 655, 12.5f, 12.5f), Vals.logVesselDV, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 650, headerRect.width, headerRect.height), "Science");
-            GUI.Box(new Rect(valRect.x, valRect.y + 675, valRect.width, valRect.height), "Pressure (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 675, valRect.width, valRect.height), "Pressure ", valStyle);
             Vals.logPressure = GUI.Toggle(new Rect(200, 705, 12.5f, 12.5f), Vals.logPressure, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 700, valRect.width, valRect.height), "Temperature (N/A WIP)", valStyle);
             Vals.logTemperature = GUI.Toggle(new Rect(200, 730, 12.5f, 12.5f), Vals.logTemperature, "");
