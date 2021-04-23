@@ -147,8 +147,8 @@ namespace KSPDataExport
                     orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : "";
                     gravity = Vals.logGravity ? String.Format("{0},", 1.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
 
-                    targDist = Vals.logTargDist ? String.Format("{0},", 2.ToString()) : Vals.everLogTargDist ? "," : ""; //TODO
-                    targVel = Vals.logTargVel ? String.Format("{0},", 3.ToString()) : Vals.everLogTargVel ? "," : ""; //TODO
+                    targDist = Vals.logTargDist ? String.Format("{0},", Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString()) : Vals.everLogTargDist ? "," : "";
+                    targVel = Vals.logTargVel ? String.Format("{0},", Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString()) : Vals.everLogTargVel ? "," : "";
 
                     stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
                     vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";

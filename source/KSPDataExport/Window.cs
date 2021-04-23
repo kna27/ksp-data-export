@@ -110,9 +110,9 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 475, valRect.width, valRect.height), "Gravity (N/A WIP)", valStyle);
             Vals.logGravity = GUI.Toggle(new Rect(200, 505, 12.5f, 12.5f), Vals.logGravity, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 500, headerRect.width, headerRect.height), "Target");
-            GUI.Box(new Rect(valRect.x, valRect.y + 525, valRect.width, valRect.height), "Target Distance (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 525, valRect.width, valRect.height), "Target Distance", valStyle);
             Vals.logTargDist = GUI.Toggle(new Rect(200, 555, 12.5f, 12.5f), Vals.logTargDist, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 550, valRect.width, valRect.height), "Target Velocity (N/A WIP)", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 550, valRect.width, valRect.height), "Target Velocity", valStyle);
             Vals.logTargVel = GUI.Toggle(new Rect(200, 580, 12.5f, 12.5f), Vals.logTargVel, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 575, headerRect.width, headerRect.height), "Resources");
             GUI.Box(new Rect(valRect.x, valRect.y + 600, valRect.width, valRect.height), "Stage DeltaV", valStyle);
