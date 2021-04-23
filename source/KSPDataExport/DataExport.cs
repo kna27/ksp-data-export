@@ -170,7 +170,6 @@ namespace KSPDataExport
                 {
                     fileSize = "0.0 Bytes";
                 }
-                ScreenMessages.PostScreenMessage(String.Format("Temp: {0}; logTemp: {1}; everLogTemp: {2}", temp, Vals.logTemperature.ToString(), Vals.everLogTemperature.ToString()));
             }
         }
 
