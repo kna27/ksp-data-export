@@ -1,24 +1,24 @@
 //Vessel
-logVelocity=False
+logVelocity=True
 logGForce=False
 logAcceleration=False
 logThrust=False
-logTWR=False
+logTWR=True
 logMass=False
-logPitch=True
+logPitch=False
 
 //Position
-logAltTer=False
+logAltTer=True
 logAltSea=False
-logDownrangeDist=False
+logDownrangeDist=True
 logLat=False
 logLon=False
 
 //Orbit
-logAp=False
+logAp=True
 logPe=False
 logInc=False
-logOrbVel=False
+logOrbVel=True
 logGravity=False
 
 //Target

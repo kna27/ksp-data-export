@@ -56,7 +56,7 @@ namespace KSPDataExport
         void Start()
         {
             actVess = FlightGlobals.ActiveVessel;
-            CSVName = DateTime.Now.ToString("yyyyMMddHHmm") + ".csv";
+            CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
             CSVpath = @"/GameData/DataExport/graphs/" + CSVName;
             if (!EventsHolder.alreadyStarted)
             {
