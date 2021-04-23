@@ -17,14 +17,16 @@ This mod has only been tested on Windows.
 
 1. Download the GameData/DataExport folder.
 2. Copy the KSPMissionKontrol folder to `YourKSPInstallDirectory/Kerbal Space Program/GameData`
- 
+
 Your directory should look like: `YourKSPInstallDirectory/Kerbal Space Program/GameData/DataExport` if done correctly.
 
 ## How to use
 
-Press `alt + n` to open the GUI for the mod.
+Click the mod's icon in flight to view the GUI for the mod.
 
-Detailed instructions will be coming soon.
+This video goes in-depth on how to use the mod:
+
+[![Help Video](https://img.youtube.com/vi/3s2SctniVLM/0.jpg)](https://www.youtube.com/watch?v=3s2SctniVLM)
 
 ## Suport
 
