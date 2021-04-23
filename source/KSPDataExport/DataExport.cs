@@ -146,7 +146,7 @@ namespace KSPDataExport
                     pe = Vals.logPe ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.PeA)).ToString()) : Vals.everLogPe ? "," : "";
                     inc = Vals.logInc ? String.Format("{0},", Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString()) : Vals.everLogInc ? "," : "";
                     orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : "";
-                    gravity = Vals.logGravity ? String.Format("{0},", 1.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
+                    gravity = Vals.logGravity ? String.Format("{0},", 0.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
 
                     targDist = Vals.logTargDist ? String.Format("{0},", Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString()) : Vals.everLogTargDist ? "," : "";
                     targVel = Vals.logTargVel ? String.Format("{0},", Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString()) : Vals.everLogTargVel ? "," : "";
@@ -155,7 +155,7 @@ namespace KSPDataExport
                     vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
 
                     pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString()) : Vals.everLogPressure ? "," : "";
-                    temp = Vals.logTemperature ? String.Format("{0},", Math.Round(actVess.atmosphericTemperature, 2).ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
+                    temp = Vals.logTemperature ? String.Format("{0},", 0.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
 
                     //Write the variables to the file
                     AddData();

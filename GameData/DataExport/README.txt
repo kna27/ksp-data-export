@@ -4,7 +4,7 @@
  | . \ ___) |  __/  | |_| | (_| | || (_| | | |___ >  <| |_) | (_) | |  | |_ 
  |_|\_\____/|_|     |____/ \__,_|\__\__,_| |_____/_/\_\ .__/ \___/|_|   \__|
                                                       |_|                   
-Version: 0.4a
+Version: 0.5b
 __________________________________________________________________________________________
 
 
@@ -21,7 +21,7 @@ This mod allows you to export your flight data to a CSV file. You are then able 
 
 BUGS
 
-This current version of the mod is dev-only, so do not report any bugs. There are currently quite a few, and I am getting to them. After a public or beta testing build is released, feel free to report them on the GitHub repo at https://github.com/kna27/ksp-data-export/issues.
+If you encounter any bugs or have any suggestions, report them on the GitHub repo at https://github.com/kna27/ksp-data-export/issues.
 
 
 INSTALLATION

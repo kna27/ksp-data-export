@@ -86,7 +86,6 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 150, valRect.width, valRect.height), "Mass", valStyle);
             Vals.logMass = GUI.Toggle(new Rect(200, 180, 12.5f, 12.5f), Vals.logMass, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 175, valRect.width, valRect.height), "Pitch (N/A WIP)", valStyle);
-            Vals.logPitch = GUI.Toggle(new Rect(200, 205, 12.5f, 12.5f), Vals.logPitch, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 200, headerRect.width, headerRect.height), "Position");
             GUI.Box(new Rect(valRect.x, valRect.y + 225, valRect.width, valRect.height), "Altitude From Terrain", valStyle);
             Vals.logAltTer = GUI.Toggle(new Rect(200, 255, 12.5f, 12.5f), Vals.logAltTer, "");
@@ -108,7 +107,6 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 450, valRect.width, valRect.height), "Orbital Velocity", valStyle);
             Vals.logOrbVel = GUI.Toggle(new Rect(200, 480, 12.5f, 12.5f), Vals.logOrbVel, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 475, valRect.width, valRect.height), "Gravity (N/A WIP)", valStyle);
-            Vals.logGravity = GUI.Toggle(new Rect(200, 505, 12.5f, 12.5f), Vals.logGravity, "");
             GUI.Box(new Rect(headerRect.x, headerRect.y + 500, headerRect.width, headerRect.height), "Target");
             GUI.Box(new Rect(valRect.x, valRect.y + 525, valRect.width, valRect.height), "Target Distance", valStyle);
             Vals.logTargDist = GUI.Toggle(new Rect(200, 555, 12.5f, 12.5f), Vals.logTargDist, "");
@@ -123,7 +121,6 @@ namespace KSPDataExport
             GUI.Box(new Rect(valRect.x, valRect.y + 675, valRect.width, valRect.height), "Pressure ", valStyle);
             Vals.logPressure = GUI.Toggle(new Rect(200, 705, 12.5f, 12.5f), Vals.logPressure, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 700, valRect.width, valRect.height), "Temperature (N/A WIP)", valStyle);
-            Vals.logTemperature = GUI.Toggle(new Rect(200, 730, 12.5f, 12.5f), Vals.logTemperature, "");
 
             //Make the window dragable
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));

@@ -8,9 +8,7 @@ You can then open this CSV file in a program such as Excel and make as many char
 
 ## Reporting Bugs
 
-The current version of the mod is **DEV ONLY**, do not download unless you know what you are doing.
-
-As such, do not report any bugs. I know that there are a lot,  and I am getting to them. As soon as an official build is made, feel free to report any bugs you find.
+If you encounter any bugs or have any suggestions, report them at https://github.com/kna27/ksp-data-export/issues.
 
 ## Installation
 This mod has only been tested on Windows.
