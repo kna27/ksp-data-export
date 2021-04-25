@@ -2,6 +2,8 @@
 
 ## Introduction
 
+**[Forum Thread](https://forum.kerbalspaceprogram.com/index.php?/topic/201967-111x-export-flight-data-to-a-csv-file-mod)**
+
 Ever wanted to view your KSP flight data in a graph? Well, this mod allows you to do that! Simply choose which values you would like to log, and all of your flight data will get exported to a CSV file!
 
 You can then open this CSV file in a program such as Excel and make as many charts and graphs as you desire!
@@ -11,7 +13,9 @@ You can then open this CSV file in a program such as Excel and make as many char
 If you encounter any bugs or have any suggestions, report them at https://github.com/kna27/ksp-data-export/issues.
 
 ## Installation
-This mod has only been tested on Windows.
+This mod currently only works on Windows, however, Linux and MacOS support are coming soon.
+
+This mod is now available on [CKAN](https://github.com/KSP-CKAN/CKAN), [SpaceDock](https://spacedock.info/mod/2711/KSP%20Data%20Export), and [CurseForge](https://www.curseforge.com/kerbal/ksp-mods/data-export).
 
 1. Download GameData.zip from the [latest release here](https://github.com/kna27/ksp-data-export/releases/latest)
 2. Copy the DataExport folder to `YourKSPInstallDirectory/Kerbal Space Program/GameData`
