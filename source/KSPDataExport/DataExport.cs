@@ -21,6 +21,9 @@ namespace KSPDataExport
         private int lastLoggedTime = 0;
 
         public static Vessel actVess;
+        static string launchBody;
+        static double launchLat;
+        static double launchLon;
         FileInfo fi;
 
         static int elapsedTime;
@@ -83,6 +86,9 @@ namespace KSPDataExport
             {
                 fileSize = "0.0 Bytes";
             }
+            launchBody = actVess.mainBody.bodyDisplayName;
+            launchLat = DegToRad(actVess.latitude);
+            launchLon = DegToRad(actVess.longitude);
         }
 
         void FixedUpdate()
@@ -218,8 +224,15 @@ namespace KSPDataExport
         //Gets the distance between a lat/lon pair and the KSC
         private double Distance(double lat, double lon)
         {
-            double distance = ((600 * Math.Acos((Math.Sin(-0.0016963029533) * Math.Sin(DegToRad(lat))) + Math.Cos(-0.0016963029533) * Math.Cos(DegToRad(lat)) * Math.Cos(DegToRad(lon) - -1.30127703355))));
-            return (distance);
+            if (actVess.mainBody.bodyDisplayName == launchBody)
+            {
+                double distance = ((600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(lat)) * Math.Cos(DegToRad(lon) - launchLon))));
+                return (distance);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         //Converts degrees to radians (used in Distance)

@@ -36,8 +36,6 @@ namespace KSPDataExport
             logRate = DataExport.waitTime.ToString();
             showGUI = false;
             onText = DataExport.isLogging == true ? "Turn Off" : "Turn On";
-
-
         }
 
         void OnGUI()
@@ -159,7 +157,7 @@ namespace KSPDataExport
             logRate = GUI.TextField(inptRect, logRate, 3);
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 150, buttonRect.width, buttonRect.height), "Choose logged vals", buttonStyle))
             {
-                showLoggedVals = true;
+                showLoggedVals = !showLoggedVals;
             }
             //Opens folder containing .csv files
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 190, buttonRect.width, buttonRect.height), "View graphs", buttonStyle))
