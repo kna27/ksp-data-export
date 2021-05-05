@@ -35,6 +35,7 @@ namespace KSPDataExport
         {
             logRate = DataExport.waitTime.ToString();
             showGUI = false;
+            showLoggedVals = false;
             onText = DataExport.isLogging == true ? "Turn Off" : "Turn On";
         }
 
