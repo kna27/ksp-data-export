@@ -13,7 +13,7 @@ You can then open this CSV file in a program such as Excel and make as many char
 If you encounter any bugs or have any suggestions, report them at https://github.com/kna27/ksp-data-export/issues.
 
 ## Installation
-This mod has support for Windows, Linux, and macOS.
+This mod currently only works on Windows, however, Linux and MacOS support are coming soon.
 
 This mod is now available on [CKAN](https://github.com/KSP-CKAN/CKAN), [SpaceDock](https://spacedock.info/mod/2711/KSP%20Data%20Export), and [CurseForge](https://www.curseforge.com/kerbal/ksp-mods/data-export).
 
