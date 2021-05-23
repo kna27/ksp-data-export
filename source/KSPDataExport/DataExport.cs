@@ -109,16 +109,14 @@ namespace KSPDataExport
                 }
                 catch
                 {
-                    using (FileStream fs = File.Create(CSVpath)) ;
-                    using (StreamWriter file = new StreamWriter(CSVpath, true))
+                    using (FileStream fs = File.Create(CSVpath)) { };
+                    using StreamWriter file = new StreamWriter(CSVpath, true);
+                    try
                     {
-                        try
-                        {
-                            file.WriteLine(CSVpath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
-                        }
-                        catch
-                        {
-                        }
+                        file.WriteLine(CSVpath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
+                    }
+                    catch
+                    {
                     }
                 }
             }
@@ -184,17 +182,15 @@ namespace KSPDataExport
         {
             try
             {
-                using (StreamWriter file = new StreamWriter(CSVpath, true))
+                using StreamWriter file = new StreamWriter(CSVpath, true);
+                try
                 {
-                    try
-                    {
-                        //Write a new line to the file
-                        file.WriteLine(String.Format("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log("Was unable to log data to file: " + e);
-                    }
+                    //Write a new line to the file
+                    file.WriteLine(String.Format("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Was unable to log data to file: " + e);
                 }
             }
             catch (Exception ex)
@@ -208,16 +204,14 @@ namespace KSPDataExport
         {
             File.Create(CSVpath);
             File.Delete(CSVpath);
-            using (FileStream fs = File.Create(CSVpath)) ;
-            using (StreamWriter file = new StreamWriter(CSVpath, true))
+            using (FileStream fs = File.Create(CSVpath)) { };
+            using StreamWriter file = new StreamWriter(CSVpath, true);
+            try
             {
-                try
-                {
-                    file.WriteLine(CSVpath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
-                }
-                catch
-                {
-                }
+                file.WriteLine(CSVpath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
+            }
+            catch
+            {
             }
         }
 
