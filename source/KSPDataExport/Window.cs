@@ -41,16 +41,24 @@ namespace KSPDataExport
 
         void OnGUI()
         {
-            buttonStyle = new GUIStyle("button");
-            buttonStyle.fontSize = 16;
-            infoStyle = new GUIStyle("box");
-            infoStyle.fontSize = 11;
-            infoStyle.alignment = TextAnchor.MiddleLeft;
-            closeStyle = new GUIStyle("button");
-            closeStyle.alignment = TextAnchor.UpperLeft;
-            valStyle = new GUIStyle("box");
-            valStyle.fontSize = 11;
-            valStyle.alignment = TextAnchor.MiddleLeft;
+            buttonStyle = new GUIStyle("button")
+            {
+                fontSize = 16
+            };
+            infoStyle = new GUIStyle("box")
+            {
+                fontSize = 11,
+                alignment = TextAnchor.MiddleLeft
+            };
+            closeStyle = new GUIStyle("button")
+            {
+                alignment = TextAnchor.UpperLeft
+            };
+            valStyle = new GUIStyle("box")
+            {
+                fontSize = 11,
+                alignment = TextAnchor.MiddleLeft
+            };
 
             if (showGUI)
             {
@@ -163,6 +171,7 @@ namespace KSPDataExport
             //Opens folder containing .csv files
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 190, buttonRect.width, buttonRect.height), "View graphs", buttonStyle))
             {
+                System.Diagnostics.Process.Start(DataExport.dataPath);
                 Application.OpenURL(DataExport.dataPath);
             }
             //Opens link to GitHub repo
