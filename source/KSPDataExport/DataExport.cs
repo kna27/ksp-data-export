@@ -9,9 +9,10 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class DataExport : MonoBehaviour
     {
+        public static string appPath;
         public static string CSVpath;
-        public static string dataPath = @"/GameData/DataExport/graphs/";
-        public static string cfgPath = @"/GameData/DataExport/logged.vals";
+        public static string dataPath;
+        public static string cfgPath;
         public static string fileSize;
         public static string CSVName;
         static readonly string[] suffixes = { " Bytes", " KB", " MB" };
@@ -56,19 +57,27 @@ namespace KSPDataExport
         static string pressure;
         static string temp;
 
-        void Start()
+        void Awake()
         {
+            dataPath = @"/GameData/DataExport/graphs/";
+            cfgPath = @"/GameData/DataExport/logged.vals";
+
             actVess = FlightGlobals.ActiveVessel;
             CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
             CSVpath = @"/GameData/DataExport/graphs/" + CSVName;
-            if (!EventsHolder.alreadyStarted)
+            if (Application.platform == RuntimePlatform.OSXPlayer)
             {
-                EventsHolder.appPath = Directory.GetParent(Application.dataPath).ToString();
-                dataPath = EventsHolder.appPath + dataPath;
-                cfgPath = EventsHolder.appPath + cfgPath;
-                EventsHolder.alreadyStarted = true;
+                appPath = Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString();
             }
-            CSVpath = EventsHolder.appPath + CSVpath;
+            else
+            {
+                appPath = Directory.GetParent(Application.dataPath).ToString();
+            }
+
+            dataPath = appPath + dataPath;
+            cfgPath = appPath + cfgPath;
+
+            CSVpath = appPath + CSVpath;
             if (!Directory.Exists(dataPath))
             {
                 Directory.CreateDirectory(dataPath);
@@ -91,9 +100,15 @@ namespace KSPDataExport
             launchLon = DegToRad(actVess.longitude);
         }
 
+        void Start()
+        {
+            AppLauncher launcher = new AppLauncher();
+            launcher.InitIcon();
+        }
+
         void FixedUpdate()
         {
-            
+
             //Create the CSV folder if it does not exist
             if (!Directory.Exists(dataPath))
             {
@@ -155,8 +170,8 @@ namespace KSPDataExport
                     targDist = Vals.logTargDist ? String.Format("{0},", Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString()) : Vals.everLogTargDist ? "," : "";
                     targVel = Vals.logTargVel ? String.Format("{0},", Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString()) : Vals.everLogTargVel ? "," : "";
 
-                    stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
-                    vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
+                    stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float)actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
+                    vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float)actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
 
                     pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString()) : Vals.everLogPressure ? "," : "";
                     temp = Vals.logTemperature ? String.Format("{0},", 0.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
