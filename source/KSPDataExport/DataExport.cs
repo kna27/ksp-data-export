@@ -63,7 +63,7 @@ namespace KSPDataExport
             CSVpath = @"/GameData/DataExport/graphs/" + CSVName;
             if (!EventsHolder.alreadyStarted)
             {
-                EventsHolder.appPath = Application.dataPath.Substring(0, Application.dataPath.Length - 13);
+                EventsHolder.appPath = Directory.GetParent(Application.dataPath).ToString();
                 dataPath = EventsHolder.appPath + dataPath;
                 cfgPath = EventsHolder.appPath + cfgPath;
                 EventsHolder.alreadyStarted = true;
