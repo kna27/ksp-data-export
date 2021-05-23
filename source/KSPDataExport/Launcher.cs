@@ -21,7 +21,7 @@ namespace KSPDataExport
 		{
 			if (!EventsHolder.alreadyStarted)
 			{
-				EventsHolder.appPath = Application.dataPath.Substring(0, Application.dataPath.Length - 13);
+				EventsHolder.appPath = Directory.GetParent(Application.dataPath).ToString();
 				AppIconPath = EventsHolder.appPath + AppIconPath;
 				AppIcon ??= new Texture2D(32, 32);
 				ImageConversion.LoadImage(AppIcon, File.ReadAllBytes(AppIconPath));
