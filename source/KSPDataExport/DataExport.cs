@@ -57,8 +57,9 @@ namespace KSPDataExport
         static string pressure;
         static string temp;
 
-        void Awake()
+        void Start()
         {
+            Debug.Log("{Data Export} Init");
             dataPath = @"/GameData/DataExport/graphs/";
             cfgPath = @"/GameData/DataExport/logged.vals";
 
@@ -98,12 +99,6 @@ namespace KSPDataExport
             launchBody = actVess.mainBody.bodyDisplayName;
             launchLat = DegToRad(actVess.latitude);
             launchLon = DegToRad(actVess.longitude);
-        }
-
-        void Start()
-        {
-            AppLauncher launcher = new AppLauncher();
-            launcher.InitIcon();
         }
 
         void FixedUpdate()
