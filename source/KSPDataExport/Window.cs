@@ -191,6 +191,7 @@ namespace KSPDataExport
             {
                 if (wasLoggingStoppedByIncorrectLogRateValue)
                 {
+                    onText = "Turn Off";
                     DataExport.isLogging = true;
                     wasLoggingStoppedByIncorrectLogRateValue = false;
                     DataExport.waitTime = float.Parse(logRate);
