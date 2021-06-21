@@ -1,4 +1,4 @@
-﻿//Gettinga and setting values from a file
+﻿// Getting and setting values from a file
 
 using System;
 using System.IO;
@@ -35,11 +35,9 @@ namespace KSPDataExport
                     //Create variable if it does not exist and set it to false
                     try
                     {
-                        using (StreamWriter file = new StreamWriter(filePath, true))
-                        {
-                            file.WriteLine(valueName + "=False");
-                            return false;
-                        }
+                        using StreamWriter file = new StreamWriter(filePath, true);
+                        file.WriteLine(valueName + "=False");
+                        return false;
                     }
                     catch (Exception ex)
                     {
@@ -58,7 +56,6 @@ namespace KSPDataExport
         //Sets a value from the filePath, given the valueName and the value to set it as
         public static void SetValue(string filePath, string valueName, bool value)
         {
-            string valName = valueName.ToString();
             string[] arrLine = File.ReadAllLines(filePath);
             bool done = false;
             for (int i = 0; i < arrLine.Length; i++)
@@ -68,7 +65,7 @@ namespace KSPDataExport
                 {
                     //Split string on equals sign
                     string[] lineSides = arrLine[i].Split('=');
-                    if (lineSides[0] == valName)
+                    if (lineSides[0] == valueName)
                     {
                         //Set right side of line to the given value and write it to the file
                         arrLine[i] = valueName + "=" + value.ToString();
@@ -78,19 +75,15 @@ namespace KSPDataExport
                 }
             }
             //Creates the value if none was found in the file
-            if (!done)
+            if (done) return;
+            try
             {
-                try
-                {
-                    using (StreamWriter file = new StreamWriter(filePath, true))
-                    {
-                        file.WriteLine(valueName + "=" + value.ToString());
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException("Error: ", ex);
-                }
+                using StreamWriter file = new StreamWriter(filePath, true);
+                file.WriteLine(valueName + "=" + value.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error: ", ex);
             }
         }
     }

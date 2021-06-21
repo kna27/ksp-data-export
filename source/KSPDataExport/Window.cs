@@ -1,5 +1,6 @@
-﻿//The GUI
+﻿// The GUI
 
+using System.Globalization;
 using UnityEngine;
 
 namespace KSPDataExport
@@ -7,11 +8,11 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class Window : MonoBehaviour
     {
-        public static bool showGUI = false;
-        public static bool showLoggedVals = false;
-        bool wasLoggingStoppedByIncorrectLogRateValue = false;
+        public static bool showGUI;
+        public static bool showLoggedVals;
+        bool wasLoggingStoppedByIncorrectLogRateValue;
 
-        Rect windowRect = new Rect(150, 100, 275, 300);
+        private Rect windowRect = new Rect(150, 100, 275, 300);
         Rect loggedValsRect = new Rect(150, 100, 225, 760);
         Rect buttonRect = new Rect(50, 25, 175, 25);
         Rect infoRect = new Rect(12.5f, 60, 250, 20);
@@ -33,10 +34,10 @@ namespace KSPDataExport
 
         void Start()
         {
-            logRate = DataExport.waitTime.ToString();
+            logRate = DataExport.waitTime.ToString(CultureInfo.InvariantCulture);
             showGUI = false;
             showLoggedVals = false;
-            onText = DataExport.isLogging == true ? "Turn Off" : "Turn On";
+            onText = DataExport.isLogging ? "Turn Off" : "Turn On";
         }
 
         void OnGUI()
@@ -129,7 +130,7 @@ namespace KSPDataExport
             Vals.logPressure = GUI.Toggle(new Rect(200, 705, 12.5f, 12.5f), Vals.logPressure, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 700, valRect.width, valRect.height), "Temperature (N/A WIP)", valStyle);
 
-            //Make the window dragable
+            //Make the window draggable
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));
         }
 
@@ -145,14 +146,14 @@ namespace KSPDataExport
             if (GUI.Button(buttonRect, onText, buttonStyle))
             {
                 DataExport.isLogging = !DataExport.isLogging;
-                onText = DataExport.isLogging == true ? "Turn Off" : "Turn On";
+                onText = DataExport.isLogging ? "Turn Off" : "Turn On";
             }
             //Label for CSV name
             if (GUI.Button(infoRect, "CSV Name: " + DataExport.CSVName, infoStyle))
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(DataExport.CSVpath);
+                    System.Diagnostics.Process.Start(DataExport.CSVPath);
                 }
                 catch
                 {
@@ -180,7 +181,7 @@ namespace KSPDataExport
                 Application.OpenURL("https://github.com/kna27/ksp-data-export");
             }
             //Check whether log rate does not contain invalid characters, and stop logging if it does
-            if (!float.TryParse(logRate, out float f))
+            if (!float.TryParse(logRate, out _))
             {
                 onText = "Turn On";
                 ScreenMessages.PostScreenMessage("Not a valid value! Logging paused.");

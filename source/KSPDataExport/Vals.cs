@@ -1,4 +1,4 @@
-﻿//Container of whether or not to log values
+﻿// Container of whether or not to log values
 
 using UnityEngine;
 
@@ -127,10 +127,10 @@ namespace KSPDataExport
 
         void Update()
         {
-            //If any of the bools have changed
+            // If any of the bools have changed
             if (tempLogVelocity != logVelocity || tempLogGForce != logGForce || tempLogAcceleration != logAcceleration || tempLogThrust != logThrust || tempLogTWR != logTWR || tempLogMass != logMass || tempLogPitch != logPitch || tempLogAltTer != logAltTer || tempLogAltSea != logAltSea || tempLogDownrangeDist != logDownrangeDist || tempLogLat != logLat || tempLogLon != logLon || tempLogAp != logAp || tempLogPe != logPe || tempLogInc != logInc || tempLogOrbVel != logOrbVel || tempLogGravity != logGravity || tempLogTargDist != logTargDist || tempLogTargVel != logTargVel || tempLogStageDV != logStageDV || tempLogVesselDV != logVesselDV || tempLogPressure != logPressure || tempLogTemperature != logTemperature)
             {
-                //Change the 'ever' bools if needed
+                // Change the 'ever' bools if needed
                 everLogVelocity = logVelocity ? logVelocity : everLogVelocity;
                 everLogGForce = logGForce ? logGForce : everLogGForce;
                 everLogAcceleration = logAcceleration ? logAcceleration : everLogAcceleration;
@@ -155,7 +155,7 @@ namespace KSPDataExport
                 everLogPressure = logPressure ? logPressure : everLogPressure;
                 everLogTemperature = logTemperature ? logTemperature : everLogTemperature;
 
-                //Write the new values of the bools to the file
+                // Write the new values of the bools to the file
                 LoadVals.SetValue(DataExport.cfgPath, "logVelocity", logVelocity);
                 LoadVals.SetValue(DataExport.cfgPath, "logGForce", logGForce);
                 LoadVals.SetValue(DataExport.cfgPath, "logAcceleration", logAcceleration);
@@ -181,7 +181,7 @@ namespace KSPDataExport
                 LoadVals.SetValue(DataExport.cfgPath, "logTemperature", logTemperature);
             }
 
-            //Set temporary bools to the current bool at the end of the frame
+            // Set temporary bools to the current bool at the end of the frame
             tempLogVelocity = logVelocity;
             tempLogGForce = logGForce;
             tempLogAcceleration = logAcceleration;
