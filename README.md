@@ -33,3 +33,7 @@ This video goes in-depth on how to use the mod:
 ## Support
 
 [Email me with any questions or comments](mailto:krisharora27@gmail.com)
+
+## Contributing
+
+To get the references in the csproj to work, all you need to do is add an environment variable on your machine. The process to do this is different on every OS. Make an env var with the name `KSP`, with a value of the path to `Path/To/Kerbal Space Program/KSP_Data/Managed`. This should be the full path. On Windows, for me it is `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed`. And on Linux, it is `/.steam/debian-installation/steamapps/common/Kerbal Space Program/KSP_Data/Managed`. Figure out what it is for you, and then you should be good to go.
