@@ -30,6 +30,6 @@ This video goes in-depth on how to use the mod:
 
 [![Help Video](https://img.youtube.com/vi/3s2SctniVLM/0.jpg)](https://www.youtube.com/watch?v=3s2SctniVLM)
 
-## Suport
+## Support
 
 [Email me with any questions or comments](mailto:krisharora27@gmail.com)
