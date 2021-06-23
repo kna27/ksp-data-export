@@ -56,6 +56,7 @@ namespace KSPDataExport
         static string vesselDV;
 
         static string pressure;
+        // ReSharper disable once NotAccessedField.Local
         static string temp;
 
         void Start()
@@ -67,15 +68,8 @@ namespace KSPDataExport
             actVess = FlightGlobals.ActiveVessel;
             CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
             CSVPath = @"/GameData/DataExport/graphs/" + CSVName;
-            if (Application.platform == RuntimePlatform.OSXPlayer)
-            {
-                appPath = Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString();
-            }
-            else
-            {
-                appPath = Directory.GetParent(Application.dataPath).ToString();
-            }
-
+            appPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
+            
             dataPath = appPath + dataPath;
             cfgPath = appPath + cfgPath;
 
@@ -146,34 +140,66 @@ namespace KSPDataExport
                     //Setting the value of all variables
                     elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
 
-                    srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
-                    gForce = Vals.logGForce ? String.Format("{0},", Math.Round(actVess.geeForce, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogGForce ? "," : "";
-                    acceleration = Vals.logAcceleration ? String.Format("{0},", Math.Round(actVess.acceleration.magnitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAcceleration ? "," : "";
-                    thrust = Vals.logThrust ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogThrust ? "," : "";
-                    TWR = Vals.logTWR ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTWR ? "," : "";
-                    mass = Vals.logMass ? String.Format("{0},", ((float)Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString(CultureInfo.InvariantCulture)) : Vals.everLogMass ? "," : "";
-                    pitch = Vals.logPitch ? String.Format("{0},", 0.ToString()) : Vals.everLogPitch ? "," : ""; //TODO
+                    srfVel = Vals.logVelocity ?
+                        $"{Mathf.RoundToInt((float) actVess.srf_velocity.magnitude).ToString()},"
+                        : Vals.everLogVelocity ? "," : "";
+                    gForce = Vals.logGForce ?
+                        $"{Math.Round(actVess.geeForce, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogGForce ? "," : "";
+                    acceleration = Vals.logAcceleration ?
+                        $"{Math.Round(actVess.acceleration.magnitude, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogAcceleration ? "," : "";
+                    thrust = Vals.logThrust ?
+                        $"{Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogThrust ? "," : "";
+                    TWR = Vals.logTWR ?
+                        $"{Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogTWR ? "," : "";
+                    mass = Vals.logMass ?
+                        $"{((float) Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogMass ? "," : "";
+                    pitch = Vals.logPitch ? $"{0.ToString()}," : Vals.everLogPitch ? "," : ""; //TODO
 
-                    altTer = Vals.logAltTer ? String.Format("{0},", Math.Round(FlightGlobals.ship_altitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltTer ? "," : "";
-                    altSea = Vals.logAltSea ? String.Format("{0},", Math.Round(actVess.terrainAltitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltSea ? "," : "";
-                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Distance(actVess.latitude, actVess.longitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogDownrangeDist ? "," : "";
-                    lat = Vals.logLat ? String.Format("{0},", Math.Round(actVess.latitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLat ? "," : "";
-                    lon = Vals.logLon ? String.Format("{0},", Math.Round(actVess.longitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLon ? "," : "";
+                    altTer = Vals.logAltTer ?
+                        $"{Math.Round(FlightGlobals.ship_altitude, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogAltTer ? "," : "";
+                    altSea = Vals.logAltSea ?
+                        $"{Math.Round(actVess.terrainAltitude, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogAltSea ? "," : "";
+                    downrangeDist = Vals.logDownrangeDist ?
+                        $"{Math.Round(Distance(actVess.latitude, actVess.longitude), 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogDownrangeDist ? "," : "";
+                    lat = Vals.logLat ? $"{Math.Round(actVess.latitude, 2).ToString(CultureInfo.InvariantCulture)}," : Vals.everLogLat ? "," : "";
+                    lon = Vals.logLon ? $"{Math.Round(actVess.longitude, 2).ToString(CultureInfo.InvariantCulture)}," : Vals.everLogLon ? "," : "";
 
-                    ap = Vals.logAp ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.ApA)).ToString()) : "";
-                    pe = Vals.logPe ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.PeA)).ToString()) : Vals.everLogPe ? "," : "";
-                    inc = Vals.logInc ? String.Format("{0},", Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogInc ? "," : "";
-                    orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : "";
-                    gravity = Vals.logGravity ? String.Format("{0},", 0.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
+                    ap = Vals.logAp ? $"{Math.Max(0, Mathf.RoundToInt((float) actVess.orbit.ApA)).ToString()}," : "";
+                    pe = Vals.logPe ? $"{Math.Max(0, Mathf.RoundToInt((float) actVess.orbit.PeA)).ToString()}," : Vals.everLogPe ? "," : "";
+                    inc = Vals.logInc ?
+                        $"{Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogInc ? "," : "";
+                    orbVel = Vals.logOrbVel ?
+                        $"{Mathf.RoundToInt((float) actVess.obt_velocity.magnitude).ToString()},"
+                        : Vals.everLogOrbVel ? "," : "";
+                    gravity = Vals.logGravity ? $"{0.ToString()}," : Vals.everLogGravity ? "," : ""; //TODO
 
-                    targDist = Vals.logTargDist ? String.Format("{0},", Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTargDist ? "," : "";
-                    targVel = Vals.logTargVel ? String.Format("{0},", Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTargVel ? "," : "";
+                    targDist = Vals.logTargDist ?
+                        $"{Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogTargDist ? "," : "";
+                    targVel = Vals.logTargVel ?
+                        $"{Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogTargVel ? "," : "";
 
-                    stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt((float)actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
-                    vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float)actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
+                    stageDV = Vals.logStageDV ?
+                        $"{Mathf.RoundToInt(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()},"
+                        : Vals.everLogStageDV ? "," : "";
+                    vesselDV = Vals.logVesselDV ?
+                        $"{Mathf.RoundToInt((float) actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()},"
+                        : Vals.everLogVesselDV ? "," : "";
 
-                    pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogPressure ? "," : "";
-                    temp = Vals.logTemperature ? String.Format("{0},", 0.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
+                    pressure = Vals.logPressure ?
+                        $"{Math.Round(actVess.staticPressurekPa, 2).ToString(CultureInfo.InvariantCulture)},"
+                        : Vals.everLogPressure ? "," : "";
+                    temp = Vals.logTemperature ? $"{0.ToString()}," : Vals.everLogTemperature ? "," : ""; //TODO
 
                     //Write the variables to the file
                     AddData();
@@ -200,7 +226,7 @@ namespace KSPDataExport
                 try
                 {
                     //Write a new line to the file
-                    file.WriteLine("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp);
+                    file.WriteLine("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure);
                 }
                 catch (Exception e)
                 {
@@ -218,23 +244,25 @@ namespace KSPDataExport
         {
             File.Create(CSVPath);
             File.Delete(CSVPath);
-            using (FileStream fs = File.Create(CSVPath)) { };
+            File.Create(CSVPath);
             using StreamWriter file = new StreamWriter(CSVPath, true);
             try
             {
-                file.WriteLine(CSVPath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
+                file.WriteLine(CSVPath,
+                    $"Time,{(Vals.everLogVelocity ? "Velocity," : "")}{(Vals.everLogGForce ? "GForce," : "")}{(Vals.everLogAcceleration ? "Acceleration," : "")}{(Vals.everLogThrust ? "Thrust," : "")}{(Vals.everLogTWR ? "TWR," : "")}{(Vals.everLogMass ? "Mass," : "")}{(Vals.everLogPitch ? "Pitch," : "")}{(Vals.everLogAltTer ? "AltitudeFromTerrain," : "")}{(Vals.everLogAltSea ? "AltitudeFromSea," : "")}{(Vals.everLogDownrangeDist ? "DownrangeDistance," : "")}{(Vals.everLogLat ? "Latitude," : "")}{(Vals.everLogLon ? "Longitude," : "")}{(Vals.everLogAp ? "Apoapsis," : "")}{(Vals.everLogPe ? "Periapsis," : "")}{(Vals.everLogInc ? "Inclination," : "")}{(Vals.everLogOrbVel ? "OrbitalVelocity," : "")}{(Vals.everLogGravity ? "Gravity," : "")}{(Vals.everLogTargDist ? "TargetDistance," : "")}{(Vals.everLogTargVel ? "TargetVelocity," : "")}{(Vals.everLogStageDV ? "StageDeltaV," : "")}{(Vals.everLogVesselDV ? "VesselDeltaV," : "")}{(Vals.everLogPressure ? "Pressure," : "")}{(Vals.everLogTemperature ? "Temperature," : "")}");
             }
-            catch
+            catch (Exception e)
             {
+                Debug.Log("Exception when writing headers: " + e);
             }
         }
 
         //Gets the distance between a lat/lon pair and the KSC
-        private static double Distance(double lat, double lon)
+        private static double Distance(double _lat, double _lon)
         {
             if (actVess.mainBody.bodyDisplayName == launchBody)
             {
-                double distance = ((600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(lat)) * Math.Cos(DegToRad(lon) - launchLon))));
+                double distance = ((600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(_lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(_lat)) * Math.Cos(DegToRad(_lon) - launchLon))));
                 return (distance);
             }
             else
@@ -254,7 +282,7 @@ namespace KSPDataExport
         private static string FormatSize(long bytes)
         {
             int counter = 0;
-            decimal number = (decimal)bytes;
+            decimal number = bytes;
             while (Math.Round(number / 1024) >= 1)
             {
                 number /= 1024;

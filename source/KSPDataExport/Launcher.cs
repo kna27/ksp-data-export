@@ -23,7 +23,7 @@ namespace KSPDataExport
             appIconPath += @"/GameData/DataExport/icon.png";
             Debug.Log("{Data Export} Launcher Init");
             appIcon ??= new Texture2D(32, 32);
-            ImageConversion.LoadImage(appIcon, File.ReadAllBytes(appIconPath));
+            appIcon.LoadImage(File.ReadAllBytes(appIconPath));
             GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveLauncher);
         }
@@ -55,19 +55,17 @@ namespace KSPDataExport
 
         private void RemoveLauncher()
         {
-            if (launcher != null)
-            {
-                ApplicationLauncher.Instance.RemoveModApplication(launcher);
-                launcher = null;
-            }
+            if (launcher == null) return;
+            ApplicationLauncher.Instance.RemoveModApplication(launcher);
+            launcher = null;
         }
 
-        private void OnToggleOn()
+        private static void OnToggleOn()
         {
             Window.showGUI = true;
         }
 
-        private void OnToggleOff()
+        private static void OnToggleOff()
         {
             Window.showGUI = false;
             Window.showLoggedVals = false;
