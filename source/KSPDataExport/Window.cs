@@ -71,15 +71,15 @@ namespace KSPDataExport
             }
         }
 
-        //The window for selecting which values to log
+        // The window for selecting which values to log
         void MakeLoggedValsWindow(int windowID)
         {
-            //The close button
+            // The close button
             if (GUI.Button(new Rect(200, 20, 20, 20), "x", closeStyle))
             {
                 showLoggedVals = false;
             }
-            //The Headers, Labels, and Buttons for each value
+            // The Headers, Labels, and Buttons for each value
             GUI.Box(new Rect(headerRect.x, headerRect.y + 0, headerRect.width, headerRect.height), "Vessel");
             GUI.Box(new Rect(valRect.x, valRect.y + 25, valRect.width, valRect.height), "Velocity", valStyle);
             Vals.logVelocity = GUI.Toggle(new Rect(200, 55, 12.5f, 12.5f), Vals.logVelocity, "");
@@ -130,25 +130,25 @@ namespace KSPDataExport
             Vals.logPressure = GUI.Toggle(new Rect(200, 705, 12.5f, 12.5f), Vals.logPressure, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 700, valRect.width, valRect.height), "Temperature (N/A WIP)", valStyle);
 
-            //Make the window draggable
+            // Make the window draggable
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));
         }
 
-        //The main window
+        // The main window
         void MakeWindow(int windowID)
         {
-            //Close button
+            // Close button
             if (GUI.Button(new Rect(250, 20, 20, 20), "x", closeStyle))
             {
                 showGUI = false;
             }
-            //Turn on/off button
+            // Turn on/off button
             if (GUI.Button(buttonRect, onText, buttonStyle))
             {
                 DataExport.isLogging = !DataExport.isLogging;
                 onText = DataExport.isLogging ? "Turn Off" : "Turn On";
             }
-            //Label for CSV name
+            // Label for CSV name
             if (GUI.Button(infoRect, "CSV Name: " + DataExport.CSVName, infoStyle))
             {
                 try
@@ -160,28 +160,28 @@ namespace KSPDataExport
                     ScreenMessages.PostScreenMessage("File does not exist yet. Turn on logging to see file.");
                 }
             }
-            //Label for file size
+            // Label for file size
             GUI.Box(new Rect(infoRect.x, infoRect.y + 25, infoRect.width, infoRect.height), "File size: " + DataExport.fileSize, infoStyle);
-            //Log Rate
+            // Log Rate
             GUI.Box(headerMainRect, "Log Rate (s):");
             logRate = GUI.TextField(inptRect, logRate, 3);
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 150, buttonRect.width, buttonRect.height), "Choose logged vals", buttonStyle))
             {
                 showLoggedVals = !showLoggedVals;
             }
-            //Opens folder containing .csv files
+            // Opens folder containing .csv files
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 190, buttonRect.width, buttonRect.height), "View graphs", buttonStyle))
             {
                 System.Diagnostics.Process.Start(DataExport.dataPath);
                 Application.OpenURL(DataExport.dataPath);
             }
-            //Opens link to GitHub repo
+            // Opens link to GitHub repo
             if (GUI.Button(new Rect(buttonRect.x, buttonRect.y + 230, buttonRect.width, buttonRect.height), "Help", buttonStyle))
             {
                 Application.OpenURL("https://github.com/kna27/ksp-data-export");
             }
-            //Check whether log rate does not contain invalid characters, and stop logging if it does
-            if (!float.TryParse(logRate, out _))
+            // Check whether log rate does not contain invalid characters, and stop logging if it does
+            if (!float.TryParse(logRate, out float f))
             {
                 onText = "Turn On";
                 ScreenMessages.PostScreenMessage("Not a valid value! Logging paused.");
@@ -190,15 +190,15 @@ namespace KSPDataExport
             }
             else
             {
+                DataExport.waitTime = float.Parse(logRate);
                 if (wasLoggingStoppedByIncorrectLogRateValue)
                 {
                     onText = "Turn Off";
                     DataExport.isLogging = true;
                     wasLoggingStoppedByIncorrectLogRateValue = false;
-                    DataExport.waitTime = float.Parse(logRate);
                 }
             }
-            //Make window draggable
+            // Make window draggable
             GUI.DragWindow(new Rect(0, 0, 10000, 50000));
         }
     }
