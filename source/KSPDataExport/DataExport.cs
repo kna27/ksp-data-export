@@ -243,8 +243,8 @@ namespace KSPDataExport
         //Converts degrees to radians (used in Distance)
         private static double DegToRad(double deg)
         {
-            double radians = (Math.PI / 180) * deg;
-            return (radians);
+            double radians = Math.PI / 180 * deg;
+            return radians;
         }
 
         //Formats the file size of the CSV file

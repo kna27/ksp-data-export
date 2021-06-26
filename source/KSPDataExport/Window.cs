@@ -87,7 +87,7 @@ namespace KSPDataExport
             Vals.logGForce = GUI.Toggle(new Rect(200, 80, 12.5f, 12.5f), Vals.logGForce, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 75, valRect.width, valRect.height), "Acceleration", valStyle);
             Vals.logAcceleration = GUI.Toggle(new Rect(200, 105, 12.5f, 12.5f), Vals.logAcceleration, "");
-            GUI.Box(new Rect(valRect.x, valRect.y + 100, valRect.width, valRect.height), "Thrust", valStyle);
+            GUI.Box(new Rect(valRect.x, valRect.y + 100, valRect.width, valRect.height), "Thrust (WIP)", valStyle);
             Vals.logThrust = GUI.Toggle(new Rect(200, 130, 12.5f, 12.5f), Vals.logThrust, "");
             GUI.Box(new Rect(valRect.x, valRect.y + 125, valRect.width, valRect.height), "TWR", valStyle);
             Vals.logTWR = GUI.Toggle(new Rect(200, 155, 12.5f, 12.5f), Vals.logTWR, "");
