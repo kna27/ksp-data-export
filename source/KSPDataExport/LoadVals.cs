@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using UnityEngine;
 
 namespace KSPDataExport
 {
@@ -22,12 +23,13 @@ namespace KSPDataExport
                         if (lineSides[0] == valueName)
                         {
                             //Return right side of split line
-                            return Boolean.Parse(lineSides[1]);
+                            return bool.Parse(lineSides[1]);
                         }
                     }
                 }
                 if (!createIfDoesNotExist)
                 {
+                    Debug.Log("[DataExport] Value not found and will not be created: " + valueName);
                     throw new Exception("Value not found in file");
                 }
                 else
@@ -39,16 +41,17 @@ namespace KSPDataExport
                         file.WriteLine(valueName + "=False");
                         return false;
                     }
-                    catch (Exception ex)
+                    catch (Exception e)
                     {
-                        throw new ApplicationException("Error: ", ex);
+                        Debug.Log("[DataExport] Unable to read file in GetValue: " + e);
+                        throw new ApplicationException("[DataExport] Couldn't create variable in GetValue: ", e);
                     }
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine("Error: " + ex);
+                Debug.Log("[DataExport] Unable to create variable in GetValue: " + e);
                 return false;
             }
         }
@@ -81,9 +84,10 @@ namespace KSPDataExport
                 using StreamWriter file = new StreamWriter(filePath, true);
                 file.WriteLine(valueName + "=" + value.ToString());
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ApplicationException("Error: ", ex);
+                Debug.Log("[DataExport] Unable to set value: " + e);
+                throw new ApplicationException("Error: ", e);
             }
         }
     }

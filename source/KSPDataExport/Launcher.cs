@@ -21,7 +21,7 @@ namespace KSPDataExport
         {
             appIconPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
             appIconPath += @"/GameData/DataExport/icon.png";
-            Debug.Log("{Data Export} Launcher Init");
+            Debug.Log("[Data Export] Launcher Init");
             appIcon ??= new Texture2D(32, 32);
             appIcon.LoadImage(File.ReadAllBytes(appIconPath));
             GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);

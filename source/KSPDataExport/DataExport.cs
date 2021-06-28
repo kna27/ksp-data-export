@@ -10,7 +10,7 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class DataExport : MonoBehaviour
     {
-        public static string appPath;
+        private static string appPath;
         public static string CSVPath;
         public static string dataPath;
         public static string cfgPath;
@@ -20,9 +20,9 @@ namespace KSPDataExport
 
         public static bool isLogging;
         public static float waitTime = 1f;
-        private int lastLoggedTime = 0;
+        private int lastLoggedTime;
 
-        public static Vessel actVess;
+        private static Vessel actVess;
         static string launchBody;
         static double launchLat;
         static double launchLon;
@@ -67,14 +67,7 @@ namespace KSPDataExport
             actVess = FlightGlobals.ActiveVessel;
             CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
             CSVPath = @"/GameData/DataExport/graphs/" + CSVName;
-            if (Application.platform == RuntimePlatform.OSXPlayer)
-            {
-                appPath = Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString();
-            }
-            else
-            {
-                appPath = Directory.GetParent(Application.dataPath).ToString();
-            }
+            appPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
 
             dataPath = appPath + dataPath;
             cfgPath = appPath + cfgPath;
@@ -91,7 +84,7 @@ namespace KSPDataExport
             try
             {
                 fi = new FileInfo(CSVPath);
-                fileSize = DataExport.FormatSize(fi.Length);
+                fileSize = FormatSize(fi.Length);
             }
             catch
             {
@@ -126,8 +119,9 @@ namespace KSPDataExport
                     {
                         file.WriteLine(CSVPath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Debug.Log("[DataExport] Error writing headers: "  + e);
                     }
                 }
             }
@@ -197,16 +191,16 @@ namespace KSPDataExport
                 try
                 {
                     //Write a new line to the file
-                    file.WriteLine(String.Format("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp));
+                    file.WriteLine("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp);
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Was unable to log data to file: " + e);
+                    Debug.Log("[DataExport] Was unable to log data to file: " + e);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new ApplicationException("Error: ", ex);
+                Debug.Log("[DataExport] Unable to create StreamWriter: " + e);
             }
         }
 
@@ -221,8 +215,9 @@ namespace KSPDataExport
             {
                 file.WriteLine(CSVPath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
             }
-            catch
+            catch (Exception e)
             {
+                Debug.Log("[DataExport] Error initializing file: " + e);
             }
         }
 
@@ -231,8 +226,8 @@ namespace KSPDataExport
         {
             if (actVess.mainBody.bodyDisplayName == launchBody)
             {
-                double distance = ((600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(_lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(_lat)) * Math.Cos(DegToRad(_lon) - launchLon))));
-                return (distance);
+                double distance = 600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(_lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(_lat)) * Math.Cos(DegToRad(_lon) - launchLon));
+                return distance;
             }
             else
             {
@@ -255,7 +250,7 @@ namespace KSPDataExport
             while (Math.Round(number / 1024) >= 1)
             {
                 number /= 1024;
-                counter++;
+                counter ++;
             }
             return $"{number:n1}{suffixes[counter]}";
         }
