@@ -1,5 +1,5 @@
 // Log by default
-defaultLogState=True
+defaultLogState=False
 
 // Vessel
 logVelocity=True
