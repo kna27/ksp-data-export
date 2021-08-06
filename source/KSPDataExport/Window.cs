@@ -37,6 +37,7 @@ namespace KSPDataExport
             logRate = DataExport.waitTime.ToString(CultureInfo.InvariantCulture);
             showGUI = false;
             showLoggedVals = false;
+            DataExport.isLogging = LoadVals.GetValue(DataExport.cfgPath, "defaultLogState");
             onText = DataExport.isLogging ? "Turn Off" : "Turn On";
         }
 

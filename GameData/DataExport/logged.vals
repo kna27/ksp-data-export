@@ -1,3 +1,6 @@
+// Log by default
+defaultLogState=True
+
 //Vessel
 logVelocity=True
 logGForce=False
