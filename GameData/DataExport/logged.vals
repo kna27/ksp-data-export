@@ -1,7 +1,7 @@
 // Log by default
 defaultLogState=True
 
-//Vessel
+// Vessel
 logVelocity=True
 logGForce=False
 logAcceleration=False
@@ -10,28 +10,28 @@ logTWR=True
 logMass=False
 logPitch=False
 
-//Position
+// Position
 logAltTer=True
 logAltSea=False
 logDownrangeDist=True
 logLat=False
 logLon=False
 
-//Orbit
+// Orbit
 logAp=True
 logPe=False
 logInc=False
 logOrbVel=True
 logGravity=False
 
-//Target
+// Target
 logTargDist=False
 logTargVel=False
 
-//Resources
+// Resources
 logStageDV=False
 logVesselDV=False
 
-//Science
+// Science
 logPressure=False
 logTemperature=False
