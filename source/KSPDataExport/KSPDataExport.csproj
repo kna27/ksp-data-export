@@ -84,6 +84,7 @@
     <Compile Include="Launcher.cs" />
     <Compile Include="LoadVals.cs" />
     <Compile Include="DataExport.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Vals.cs" />
   </ItemGroup>

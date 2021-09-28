@@ -16,16 +16,15 @@ namespace KSPDataExport
         public static string cfgPath;
         public static string fileSize;
         public static string CSVName;
-        static readonly string[] suffixes = { " Bytes", " KB", " MB" };
 
         public static bool isLogging;
         public static float waitTime = 1f;
         private int lastLoggedTime;
 
-        private static Vessel actVess;
-        static string launchBody;
-        static double launchLat;
-        static double launchLon;
+        public static Vessel actVess;
+        public static string launchBody;
+        public static double launchLat;
+        public static double launchLon;
         FileInfo fi;
 
         static int elapsedTime;
@@ -84,15 +83,15 @@ namespace KSPDataExport
             try
             {
                 fi = new FileInfo(CSVPath);
-                fileSize = FormatSize(fi.Length);
+                fileSize = Utilities.FormatSize(fi.Length);
             }
             catch
             {
                 fileSize = "0.0 Bytes";
             }
             launchBody = actVess.mainBody.bodyDisplayName;
-            launchLat = DegToRad(actVess.latitude);
-            launchLon = DegToRad(actVess.longitude);
+            launchLat = Utilities.DegToRad(actVess.latitude);
+            launchLon = Utilities.DegToRad(actVess.longitude);
         }
 
         void FixedUpdate()
@@ -147,7 +146,7 @@ namespace KSPDataExport
 
                     altTer = Vals.logAltTer ? String.Format("{0},", Math.Round(FlightGlobals.ship_altitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltTer ? "," : "";
                     altSea = Vals.logAltSea ? String.Format("{0},", Math.Round(actVess.terrainAltitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltSea ? "," : "";
-                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Distance(actVess.latitude, actVess.longitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogDownrangeDist ? "," : "";
+                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Utilities.Distance(actVess.latitude, actVess.longitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogDownrangeDist ? "," : "";
                     lat = Vals.logLat ? String.Format("{0},", Math.Round(actVess.latitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLat ? "," : "";
                     lon = Vals.logLon ? String.Format("{0},", Math.Round(actVess.longitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLon ? "," : "";
 
@@ -173,7 +172,7 @@ namespace KSPDataExport
                 try
                 {
                     fi = new FileInfo(CSVPath);
-                    fileSize = FormatSize(fi.Length);
+                    fileSize = Utilities.FormatSize(fi.Length);
                 }
                 catch
                 {
@@ -219,40 +218,6 @@ namespace KSPDataExport
             {
                 Debug.Log("[DataExport] Error initializing file: " + e);
             }
-        }
-
-        //Gets the distance between a lat/lon pair and the KSC
-        private static double Distance(double _lat, double _lon)
-        {
-            if (actVess.mainBody.bodyDisplayName == launchBody)
-            {
-                double distance = 600 * Math.Acos((Math.Sin(launchLat) * Math.Sin(DegToRad(_lat))) + Math.Cos(launchLat) * Math.Cos(DegToRad(_lat)) * Math.Cos(DegToRad(_lon) - launchLon));
-                return distance;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        //Converts degrees to radians (used in Distance)
-        private static double DegToRad(double deg)
-        {
-            double radians = Math.PI / 180 * deg;
-            return radians;
-        }
-
-        //Formats the file size of the CSV file
-        private static string FormatSize(long bytes)
-        {
-            int counter = 0;
-            decimal number = bytes;
-            while (Math.Round(number / 1024) >= 1)
-            {
-                number /= 1024;
-                counter ++;
-            }
-            return $"{number:n1}{suffixes[counter]}";
         }
     }
 }
