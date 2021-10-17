@@ -1,4 +1,4 @@
-﻿//Writing data to the CSV file
+﻿// Writing data to the CSV file
 
 using System;
 using System.Globalization;
@@ -97,7 +97,7 @@ namespace KSPDataExport
         void FixedUpdate()
         {
 
-            //Create the CSV folder if it does not exist
+            // Create the CSV folder if it does not exist
             if (!Directory.Exists(dataPath))
             {
                 Directory.CreateDirectory(dataPath);
@@ -124,7 +124,7 @@ namespace KSPDataExport
                     }
                 }
             }
-            //Create the CSV file if we are logging
+            // Create the CSV file if we are logging
             if (!File.Exists(CSVPath) && isLogging)
             {
                 File.Create(CSVPath);
@@ -133,7 +133,7 @@ namespace KSPDataExport
             {
                 if (Mathf.RoundToInt((float)actVess.missionTime) >= lastLoggedTime + waitTime)
                 {
-                    //Setting the value of all variables
+                    // Setting the value of all variables
                     elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
 
                     srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
@@ -165,7 +165,7 @@ namespace KSPDataExport
                     pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogPressure ? "," : "";
                     temp = Vals.logTemperature ? String.Format("{0},", 0.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
 
-                    //Write the variables to the file
+                    // Write the variables to the file
                     AddData();
                     lastLoggedTime = Mathf.RoundToInt((float)actVess.missionTime);
                 }
@@ -181,7 +181,7 @@ namespace KSPDataExport
             }
         }
 
-        //Adds the new line containing the values chosen to be logged to the file
+        // Adds the new line containing the values chosen to be logged to the file
         private static void AddData()
         {
             try
@@ -203,7 +203,7 @@ namespace KSPDataExport
             }
         }
 
-        //Initializes the file and writes the headers
+        // Initializes the file and writes the headers
         static void InitFile()
         {
             File.Create(CSVPath);

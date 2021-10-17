@@ -7,7 +7,7 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class Vals : MonoBehaviour
     {
-        //The main bools
+        // The main bools
         public static bool logVelocity;
         public static bool logGForce;
         public static bool logAcceleration;
@@ -37,7 +37,7 @@ namespace KSPDataExport
         public static bool logPressure;
         public static bool logTemperature;
 
-        //Whether each main bool has ever been set to true
+        // Whether each main bool has ever been set to true
         public static bool everLogVelocity;
         public static bool everLogGForce;
         public static bool everLogAcceleration;
@@ -67,7 +67,7 @@ namespace KSPDataExport
         public static bool everLogPressure;
         public static bool everLogTemperature;
 
-        //Temporary bools to check for changes
+        // Temporary bools to check for changes
         private static bool tempLogVelocity;
         private static bool tempLogGForce;
         private static bool tempLogAcceleration;
@@ -99,7 +99,7 @@ namespace KSPDataExport
 
         void Start()
         {
-            //Get the value of all of the bools
+            // Get the value of all of the bools
             everLogVelocity = logVelocity = LoadVals.GetValue(DataExport.cfgPath, "logVelocity");
             everLogGForce = logGForce = LoadVals.GetValue(DataExport.cfgPath, "logGForce");
             everLogAcceleration = logAcceleration = LoadVals.GetValue(DataExport.cfgPath, "logAcceleration");

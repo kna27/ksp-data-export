@@ -1,4 +1,4 @@
-﻿//The toolbar launcher button
+﻿// The toolbar launcher button
 
 using UnityEngine;
 using KSP.UI.Screens;
