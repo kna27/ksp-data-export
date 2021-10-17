@@ -131,29 +131,29 @@ namespace KSPDataExport
             if (tempLogVelocity != logVelocity || tempLogGForce != logGForce || tempLogAcceleration != logAcceleration || tempLogThrust != logThrust || tempLogTWR != logTWR || tempLogMass != logMass || tempLogPitch != logPitch || tempLogAltTer != logAltTer || tempLogAltSea != logAltSea || tempLogDownrangeDist != logDownrangeDist || tempLogLat != logLat || tempLogLon != logLon || tempLogAp != logAp || tempLogPe != logPe || tempLogInc != logInc || tempLogOrbVel != logOrbVel || tempLogGravity != logGravity || tempLogTargDist != logTargDist || tempLogTargVel != logTargVel || tempLogStageDV != logStageDV || tempLogVesselDV != logVesselDV || tempLogPressure != logPressure || tempLogTemperature != logTemperature)
             {
                 // Change the 'ever' bools if needed
-                everLogVelocity = logVelocity ? logVelocity : everLogVelocity;
-                everLogGForce = logGForce ? logGForce : everLogGForce;
-                everLogAcceleration = logAcceleration ? logAcceleration : everLogAcceleration;
-                everLogThrust = logThrust ? logThrust : everLogThrust;
-                everLogTWR = logTWR ? logTWR : everLogTWR;
-                everLogMass = logMass ? logMass : everLogMass;
-                everLogPitch = logPitch ? logPitch : everLogPitch;
-                everLogAltTer = logAltTer ? logAltTer : everLogAltTer;
-                everLogAltSea = logAltSea ? logAltSea : everLogAltSea;
-                everLogDownrangeDist = logDownrangeDist ? logDownrangeDist : everLogDownrangeDist;
-                everLogLat = logLat ? logLat : everLogLat;
-                everLogLon = logLon ? logLon : everLogLon;
-                everLogAp = logAp ? logAp : everLogAp;
-                everLogPe = logPe ? logPe : everLogPe;
-                everLogInc = logInc ? logInc : everLogInc;
-                everLogOrbVel = logOrbVel ? logOrbVel : everLogOrbVel;
-                everLogGravity = logGravity ? logGravity : everLogGravity;
-                everLogTargDist = logTargDist ? logTargDist : everLogTargDist;
-                everLogTargVel = logTargVel ? logTargVel : everLogTargVel;
-                everLogStageDV = logStageDV ? logStageDV : everLogStageDV;
-                everLogVesselDV = logVesselDV ? logVesselDV : everLogVesselDV;
-                everLogPressure = logPressure ? logPressure : everLogPressure;
-                everLogTemperature = logTemperature ? logTemperature : everLogTemperature;
+                everLogVelocity = logVelocity || everLogVelocity;
+                everLogGForce = logGForce || everLogGForce;
+                everLogAcceleration = logAcceleration || everLogAcceleration;
+                everLogThrust = logThrust || everLogThrust;
+                everLogTWR = logTWR || everLogTWR;
+                everLogMass = logMass || everLogMass;
+                everLogPitch = logPitch || everLogPitch;
+                everLogAltTer = logAltTer || everLogAltTer;
+                everLogAltSea = logAltSea || everLogAltSea;
+                everLogDownrangeDist = logDownrangeDist || everLogDownrangeDist;
+                everLogLat = logLat || everLogLat;
+                everLogLon = logLon || everLogLon;
+                everLogAp = logAp || everLogAp;
+                everLogPe = logPe || everLogPe;
+                everLogInc = logInc || everLogInc;
+                everLogOrbVel = logOrbVel || everLogOrbVel;
+                everLogGravity = logGravity || everLogGravity;
+                everLogTargDist = logTargDist || everLogTargDist;
+                everLogTargVel = logTargVel || everLogTargVel;
+                everLogStageDV = logStageDV || everLogStageDV;
+                everLogVesselDV = logVesselDV || everLogVesselDV;
+                everLogPressure = logPressure || everLogPressure;
+                everLogTemperature = logTemperature || everLogTemperature;
 
                 // Write the new values of the bools to the file
                 LoadVals.SetValue(DataExport.cfgPath, "logVelocity", logVelocity);
