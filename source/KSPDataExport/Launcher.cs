@@ -1,14 +1,13 @@
-﻿// The toolbar launcher button
-
-using UnityEngine;
+﻿using UnityEngine;
 using KSP.UI.Screens;
 using System.IO;
 
 namespace KSPDataExport
 {
-
     using MonoBehavior = MonoBehaviour;
-
+    /// <summary>
+    /// The toolbar launcher button
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class AppLauncher : MonoBehavior
     {

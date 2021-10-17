@@ -1,10 +1,11 @@
-﻿// The GUI
-
-using System.Globalization;
+﻿using System.Globalization;
 using UnityEngine;
 
 namespace KSPDataExport
 {
+    /// <summary>
+    /// The mod's GUI
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class Window : MonoBehaviour
     {

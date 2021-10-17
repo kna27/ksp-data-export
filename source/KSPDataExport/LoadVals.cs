@@ -1,14 +1,21 @@
-﻿// Getting and setting values from a file
-
-using System;
+﻿using System;
 using System.IO;
 using UnityEngine;
 
 namespace KSPDataExport
 {
+    /// <summary>
+    /// Getting and setting values from a file
+    /// </summary>
     class LoadVals
     {
-        // Gets a value from the filePath, valueName, and optional create the value if it does not exist
+        /// <summary>
+        /// Gets a value from a file and optionally create it if it doesn't exist
+        /// </summary>
+        /// <param name="filePath">Path of the file</param>
+        /// <param name="valueName">The name of the value you want to search for</param>
+        /// <param name="createIfDoesNotExist">Create the value in the file as false if not found</param>
+        /// <returns>The value from the file</returns>
         public static bool GetValue(string filePath, string valueName, bool createIfDoesNotExist = true)
         {
             try
@@ -56,7 +63,12 @@ namespace KSPDataExport
             }
         }
 
-        // Sets a value from the filePath, given the valueName and the value to set it as
+        /// <summary>
+        /// Sets a value from the filePath, given the valueName and the value to set it as
+        /// </summary>
+        /// <param name="filePath">Path of the file</param>
+        /// <param name="valueName">The name of the value you want to set</param>
+        /// <param name="value">The value you want to set it to</param>
         public static void SetValue(string filePath, string valueName, bool value)
         {
             string[] arrLine = File.ReadAllLines(filePath);

@@ -1,9 +1,10 @@
-﻿// Container of whether or not to log values
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace KSPDataExport
 {
+    /// <summary>
+    /// Container of whether or not to log values
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class Vals : MonoBehaviour
     {

@@ -1,12 +1,13 @@
-﻿// Writing data to the CSV file
-
-using System;
+﻿using System;
 using System.Globalization;
 using UnityEngine;
 using System.IO;
 
 namespace KSPDataExport
 {
+    /// <summary>
+    /// Writing data to the CSV file
+    /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class DataExport : MonoBehaviour
     {
@@ -59,7 +60,7 @@ namespace KSPDataExport
 
         void Start()
         {
-            Debug.Log("{Data Export} Init");
+            Debug.Log("[Data Export] Init");
             dataPath = @"/GameData/DataExport/graphs/";
             cfgPath = @"/GameData/DataExport/logged.vals";
 
