@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace KSPDataExport
 {
@@ -6,6 +7,10 @@ namespace KSPDataExport
     {
         private static readonly string[] suffixes = { " Bytes", " KB", " MB" };
 
+        public static string RoundToStr(double value, int decimals)
+        {
+            return Math.Round(value, decimals).ToString(CultureInfo.InvariantCulture);
+        }
         /// <summary>
         /// Gets the distance between a lat/lon pair and the vesel's launchsite
         /// </summary>

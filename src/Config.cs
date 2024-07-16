@@ -7,7 +7,7 @@ namespace KSPDataExport
     /// <summary>
     /// Getting and setting values from a file
     /// </summary>
-    class LoadVals
+    class Config
     {
         /// <summary>
         /// Gets a value from a file and optionally create it if it doesn't exist
@@ -23,15 +23,13 @@ namespace KSPDataExport
                 foreach (string line in File.ReadLines(filePath))
                 {
                     // Skip line if it starts with a comment
-                    if (!line.StartsWith("//"))
+                    if (line.StartsWith("//")) continue;
+                    //Split string on equals sign
+                    string[] lineSides = line.Split('=');
+                    if (lineSides[0] == valueName)
                     {
-                        //Split string on equals sign
-                        string[] lineSides = line.Split('=');
-                        if (lineSides[0] == valueName)
-                        {
-                            //Return right side of split line
-                            return bool.Parse(lineSides[1]);
-                        }
+                        //Return right side of split line
+                        return bool.Parse(lineSides[1]);
                     }
                 }
                 if (!createIfDoesNotExist)

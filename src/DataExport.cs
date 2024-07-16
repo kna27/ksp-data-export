@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 namespace KSPDataExport
 {
@@ -11,13 +12,15 @@ namespace KSPDataExport
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class DataExport : MonoBehaviour
     {
+        public static List<LoggableValue> loggableValues;
         private static string appPath;
         public static string CSVPath;
         public static string dataPath;
         public static string cfgPath;
         public static string fileSize;
         public static string CSVName;
-
+        private static string header;
+        
         public static bool isLogging;
         public static float waitTime = 1f;
         private int lastLoggedTime;
@@ -29,34 +32,6 @@ namespace KSPDataExport
         FileInfo fi;
 
         static int elapsedTime;
-        static string srfVel;
-        static string gForce;
-        static string acceleration;
-        static string thrust;
-        static string TWR;
-        static string mass;
-        static string pitch;
-
-        static string altTer;
-        static string altSea;
-        static string downrangeDist;
-        static string lat;
-        static string lon;
-
-        static string ap;
-        static string pe;
-        static string inc;
-        static string orbVel;
-        static string gravity;
-
-        static string targDist;
-        static string targVel;
-
-        static string stageDV;
-        static string vesselDV;
-
-        static string pressure;
-        static string temp;
 
         void Start()
         {
@@ -65,13 +40,15 @@ namespace KSPDataExport
             cfgPath = @"/GameData/DataExport/logged.vals";
 
             actVess = FlightGlobals.ActiveVessel;
+            launchBody = actVess.mainBody.bodyDisplayName;
+            launchLat = Utilities.DegToRad(actVess.latitude);
+            launchLon = Utilities.DegToRad(actVess.longitude);
+
             CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
             CSVPath = @"/GameData/DataExport/graphs/" + CSVName;
             appPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
-
             dataPath = appPath + dataPath;
-            cfgPath = appPath + cfgPath;
-
+            cfgPath = appPath + cfgPath;        
             CSVPath = appPath + CSVPath;
             if (!Directory.Exists(dataPath))
             {
@@ -90,14 +67,44 @@ namespace KSPDataExport
             {
                 fileSize = "0.0 Bytes";
             }
-            launchBody = actVess.mainBody.bodyDisplayName;
-            launchLat = Utilities.DegToRad(actVess.latitude);
-            launchLon = Utilities.DegToRad(actVess.longitude);
+            loggableValues = new List<LoggableValue>
+            {
+                // Vessel
+                new LoggableValue("Velocity", Category.Vessel, "logVelocity", () => Utilities.RoundToStr(actVess.srf_velocity.magnitude, 2)),
+                new LoggableValue("GForce", Category.Vessel, "logGForce", () => Utilities.RoundToStr(actVess.geeForce, 2)),
+                new LoggableValue("Acceleration", Category.Vessel, "logAcceleration", () => Utilities.RoundToStr(actVess.acceleration.magnitude, 2)),
+                new LoggableValue("Thrust", Category.Vessel, "logThrust", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2)),
+                new LoggableValue("TWR", Category.Vessel, "logTWR", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2)),
+                new LoggableValue("Mass", Category.Vessel, "logMass", () => Utilities.RoundToStr(actVess.GetTotalMass(), 2)),
+                new LoggableValue("Pitch", Category.Vessel, "logPitch", () => Utilities.RoundToStr(actVess.GetTransform().eulerAngles.x, 2)), // TODO: Implement
+                // Position
+                new LoggableValue("Altitude from Terrain", Category.Position, "logAltTer", () => Utilities.RoundToStr(FlightGlobals.ship_altitude, 2)),
+                new LoggableValue("Altitude from the Sea", Category.Position, "logAltSea", () => Utilities.RoundToStr(actVess.altitude, 2)),
+                new LoggableValue("Downrange Distance", Category.Position, "logDownrangeDist", () => Utilities.RoundToStr(Utilities.Distance(actVess.latitude, actVess.longitude), 2)),
+                new LoggableValue("Latitude", Category.Position, "logLat", () => Utilities.RoundToStr(actVess.latitude, 5)),
+                new LoggableValue("Longitude", Category.Position, "logLon", () => Utilities.RoundToStr(actVess.longitude, 5)),
+                // Orbit
+                new LoggableValue("Apoapsis", Category.Orbit, "logAp", () => Utilities.RoundToStr(actVess.orbit.ApA, 2)),
+                new LoggableValue("Periapsis", Category.Orbit, "logPe", () => Utilities.RoundToStr(actVess.orbit.PeA, 2)),
+                new LoggableValue("Inclination", Category.Orbit, "logInc", () => Utilities.RoundToStr(actVess.orbit.inclination, 2)), // TODO: check if this or FlightGlobals.ship_orbit.inclination is right
+                new LoggableValue("Orbital Velocity", Category.Orbit, "logOrbVel", () => Utilities.RoundToStr(actVess.obt_velocity.magnitude, 2)),
+                new LoggableValue("Gravity", Category.Orbit, "logGravity", () => Utilities.RoundToStr(actVess.mainBody.GeeASL, 2)), // TODO: fix
+                // Target
+                new LoggableValue("Target Distance", Category.Target, "logTargDist", () => Utilities.RoundToStr(FlightGlobals.fetch.vesselTargetTransform is null ? 0 : Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2)),
+                new LoggableValue("Target Velocity", Category.Target, "logTargVel", () => Utilities.RoundToStr(FlightGlobals.fetch.vesselTargetTransform is null ? 0 : FlightGlobals.ship_tgtVelocity.magnitude, 2)),
+                // Resources
+                new LoggableValue("Stage DeltaV", Category.Resources, "logStageDV", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude), 0)),
+                new LoggableValue("Vessel DeltaV", Category.Resources, "logVesselDV", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude), 0)),
+                // Science
+                new LoggableValue("Pressure", Category.Science, "logPressure", () => Utilities.RoundToStr(actVess.staticPressurekPa, 2)),
+                new LoggableValue("Temperature", Category.Science, "logTemperature", () => Utilities.RoundToStr(actVess.externalTemperature, 2)) // TODO: check if right
+            };
+            
+            header = loggableValues.Aggregate("Time,", (current, value) => current + (value.Name + ","));
         }
 
         void FixedUpdate()
         {
-
             // Create the CSV folder if it does not exist
             if (!Directory.Exists(dataPath))
             {
@@ -108,7 +115,7 @@ namespace KSPDataExport
                 try
                 {
                     string[] arrLine = File.ReadAllLines(CSVPath);
-                    arrLine[0] = String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : "");
+                    arrLine[0] = header;
                     File.WriteAllLines(CSVPath, arrLine);
                 }
                 catch
@@ -117,7 +124,7 @@ namespace KSPDataExport
                     using StreamWriter file = new StreamWriter(CSVPath, true);
                     try
                     {
-                        file.WriteLine(CSVPath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
+                        file.WriteLine(CSVPath, header);
                     }
                     catch (Exception e)
                     {
@@ -136,38 +143,27 @@ namespace KSPDataExport
                 {
                     // Setting the value of all variables
                     elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
-
-                    srfVel = Vals.logVelocity ? String.Format("{0},", Mathf.RoundToInt((float)actVess.srf_velocity.magnitude).ToString()) : Vals.everLogVelocity ? "," : "";
-                    gForce = Vals.logGForce ? String.Format("{0},", Math.Round(actVess.geeForce, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogGForce ? "," : "";
-                    acceleration = Vals.logAcceleration ? String.Format("{0},", Math.Round(actVess.acceleration.magnitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAcceleration ? "," : "";
-                    thrust = Vals.logThrust ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogThrust ? "," : "";
-                    TWR = Vals.logTWR ? String.Format("{0},", Math.Round(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTWR ? "," : "";
-                    mass = Vals.logMass ? String.Format("{0},", ((float)Math.Round(actVess.GetTotalMass() * 100f) / 100f).ToString(CultureInfo.InvariantCulture)) : Vals.everLogMass ? "," : "";
-                    pitch = Vals.logPitch ? String.Format("{0},", 0.ToString()) : Vals.everLogPitch ? "," : ""; //TODO
-
-                    altTer = Vals.logAltTer ? String.Format("{0},", Math.Round(FlightGlobals.ship_altitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltTer ? "," : "";
-                    altSea = Vals.logAltSea ? String.Format("{0},", Math.Round(actVess.terrainAltitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogAltSea ? "," : "";
-                    downrangeDist = Vals.logDownrangeDist ? String.Format("{0},", Math.Round(Utilities.Distance(actVess.latitude, actVess.longitude), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogDownrangeDist ? "," : "";
-                    lat = Vals.logLat ? String.Format("{0},", Math.Round(actVess.latitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLat ? "," : "";
-                    lon = Vals.logLon ? String.Format("{0},", Math.Round(actVess.longitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogLon ? "," : "";
-
-                    ap = Vals.logAp ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.ApA)).ToString()) : "";
-                    pe = Vals.logPe ? String.Format("{0},", Math.Max(0, Mathf.RoundToInt((float)actVess.orbit.PeA)).ToString()) : Vals.everLogPe ? "," : "";
-                    inc = Vals.logInc ? String.Format("{0},", Math.Round(FlightGlobals.ship_orbit.inclination, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogInc ? "," : "";
-                    orbVel = Vals.logOrbVel ? String.Format("{0},", Mathf.RoundToInt((float)actVess.obt_velocity.magnitude).ToString()) : Vals.everLogOrbVel ? "," : "";
-                    gravity = Vals.logGravity ? String.Format("{0},", 0.ToString()) : Vals.everLogGravity ? "," : ""; //TODO
-
-                    targDist = Vals.logTargDist ? String.Format("{0},", FlightGlobals.fetch.vesselTargetTransform is null ? 0.ToString() : Math.Round(Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTargDist ? "," : "";
-                    targVel = Vals.logTargVel ? String.Format("{0},", FlightGlobals.fetch.vesselTargetTransform is null ? 0.ToString() : Math.Round(FlightGlobals.ship_tgtVelocity.magnitude, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogTargVel ? "," : "";
-
-                    stageDV = Vals.logStageDV ? String.Format("{0},", Mathf.RoundToInt(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogStageDV ? "," : "";
-                    vesselDV = Vals.logVesselDV ? String.Format("{0},", Mathf.RoundToInt((float)actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude)).ToString()) : Vals.everLogVesselDV ? "," : "";
-
-                    pressure = Vals.logPressure ? String.Format("{0},", Math.Round(actVess.staticPressurekPa, 2).ToString(CultureInfo.InvariantCulture)) : Vals.everLogPressure ? "," : "";
-                    temp = Vals.logTemperature ? String.Format("{0},", 0.ToString()) : Vals.everLogTemperature ? "," : ""; //TODO
-
-                    // Write the variables to the file
-                    AddData();
+                    try
+                    {
+                        using StreamWriter file = new StreamWriter(CSVPath, true);
+                        try
+                        {
+                            string line = elapsedTime + ",";
+                            for (int i = 0; i < loggableValues.Count; i++)
+                            {
+                                line += loggableValues[i].Logging ? loggableValues[i].Value() + "," : ",";
+                            }
+                            file.WriteLine(line);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("[DataExport] Was unable to log data to file: " + e);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("[DataExport] Unable to create StreamWriter: " + e);
+                    }
                     lastLoggedTime = Mathf.RoundToInt((float)actVess.missionTime);
                 }
                 try
@@ -182,28 +178,6 @@ namespace KSPDataExport
             }
         }
 
-        // Adds the new line containing the values chosen to be logged to the file
-        private static void AddData()
-        {
-            try
-            {
-                using StreamWriter file = new StreamWriter(CSVPath, true);
-                try
-                {
-                    //Write a new line to the file
-                    file.WriteLine("{0},{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", elapsedTime, srfVel, gForce, acceleration, thrust, TWR, mass, pitch, altTer, altSea, downrangeDist, lat, lon, ap, pe, inc, orbVel, gravity, targDist, targVel, stageDV, vesselDV, pressure, temp);
-                }
-                catch (Exception e)
-                {
-                    Debug.Log("[DataExport] Was unable to log data to file: " + e);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log("[DataExport] Unable to create StreamWriter: " + e);
-            }
-        }
-
         // Initializes the file and writes the headers
         static void InitFile()
         {
@@ -213,7 +187,7 @@ namespace KSPDataExport
             using StreamWriter file = new StreamWriter(CSVPath, true);
             try
             {
-                file.WriteLine(CSVPath, String.Format("Time,{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}", Vals.everLogVelocity ? "Velocity," : "", Vals.everLogGForce ? "GForce," : "", Vals.everLogAcceleration ? "Acceleration," : "", Vals.everLogThrust ? "Thrust," : "", Vals.everLogTWR ? "TWR," : "", Vals.everLogMass ? "Mass," : "", Vals.everLogPitch ? "Pitch," : "", Vals.everLogAltTer ? "AltitudeFromTerrain," : "", Vals.everLogAltSea ? "AltitudeFromSea," : "", Vals.everLogDownrangeDist ? "DownrangeDistance," : "", Vals.everLogLat ? "Latitude," : "", Vals.everLogLon ? "Longitude," : "", Vals.everLogAp ? "Apoapsis," : "", Vals.everLogPe ? "Periapsis," : "", Vals.everLogInc ? "Inclination," : "", Vals.everLogOrbVel ? "OrbitalVelocity," : "", Vals.everLogGravity ? "Gravity," : "", Vals.everLogTargDist ? "TargetDistance," : "", Vals.everLogTargVel ? "TargetVelocity," : "", Vals.everLogStageDV ? "StageDeltaV," : "", Vals.everLogVesselDV ? "VesselDeltaV," : "", Vals.everLogPressure ? "Pressure," : "", Vals.everLogTemperature ? "Temperature," : ""));
+                file.WriteLine(CSVPath, header);
             }
             catch (Exception e)
             {

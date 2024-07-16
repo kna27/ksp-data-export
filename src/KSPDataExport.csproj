@@ -81,12 +81,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Category.cs" />
     <Compile Include="Launcher.cs" />
-    <Compile Include="LoadVals.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="DataExport.cs" />
+    <Compile Include="LoggableValue.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Window.cs" />
-    <Compile Include="Vals.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
