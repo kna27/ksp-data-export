@@ -22,8 +22,8 @@ namespace KSPDataExport
         private static string header;
         
         public static bool isLogging;
-        public static float waitTime = 1f;
-        private int lastLoggedTime;
+        public static double waitTime = 1f;
+        private double lastLoggedTime;
 
         public static Vessel actVess;
         public static string launchBody;
@@ -31,7 +31,7 @@ namespace KSPDataExport
         public static double launchLon;
         FileInfo fi;
 
-        static int elapsedTime;
+        static double elapsedTime;
 
         void Start()
         {
@@ -139,10 +139,10 @@ namespace KSPDataExport
             }
             if (isLogging)
             {
-                if (Mathf.RoundToInt((float)actVess.missionTime) >= lastLoggedTime + waitTime)
+                if (Math.Round(actVess.missionTime, 2) >= lastLoggedTime + waitTime)
                 {
                     // Setting the value of all variables
-                    elapsedTime = Mathf.RoundToInt((float)actVess.missionTime);
+                    elapsedTime = Math.Round(actVess.missionTime, 2);
                     try
                     {
                         using StreamWriter file = new StreamWriter(CSVPath, true);
@@ -164,7 +164,7 @@ namespace KSPDataExport
                     {
                         Debug.Log("[DataExport] Unable to create StreamWriter: " + e);
                     }
-                    lastLoggedTime = Mathf.RoundToInt((float)actVess.missionTime);
+                    lastLoggedTime = Math.Round(actVess.missionTime, 2);
                 }
                 try
                 {

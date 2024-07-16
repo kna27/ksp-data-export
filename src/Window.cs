@@ -13,7 +13,7 @@ namespace KSPDataExport
     {
         public static bool showGUI;
         public static bool showLoggedVals;
-        bool wasLoggingStoppedByIncorrectLogRateValue;
+        bool wasLoggingStoppedByInvalidRate;
 
         private Rect windowRect = new Rect(150, 100, 275, 300);
         Rect loggedValsRect = new Rect(150, 100, 225, 760);
@@ -157,21 +157,21 @@ namespace KSPDataExport
                 Application.OpenURL("https://github.com/kna27/ksp-data-export");
             }
             // Check whether log rate does not contain invalid characters, and stop logging if it does
-            if (!float.TryParse(logRate, out float f))
+            if (!double.TryParse(logRate, out double d) || d < 0.01f)
             {
                 onText = "Turn On";
                 ScreenMessages.PostScreenMessage("Not a valid value! Logging paused.");
-                wasLoggingStoppedByIncorrectLogRateValue = true;
+                wasLoggingStoppedByInvalidRate = true;
                 DataExport.isLogging = false;
             }
             else
             {
-                DataExport.waitTime = float.Parse(logRate);
-                if (wasLoggingStoppedByIncorrectLogRateValue)
+                DataExport.waitTime = d;
+                if (wasLoggingStoppedByInvalidRate)
                 {
                     onText = "Turn Off";
                     DataExport.isLogging = true;
-                    wasLoggingStoppedByIncorrectLogRateValue = false;
+                    wasLoggingStoppedByInvalidRate = false;
                 }
             }
             // Make window draggable
