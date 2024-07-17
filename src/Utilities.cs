@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using UnityEngine;
 
 namespace KSPDataExport
 {
@@ -12,6 +13,32 @@ namespace KSPDataExport
             return Math.Round(value, decimals).ToString(CultureInfo.InvariantCulture);
         }
 
+        public static double GetSrfAlt()
+        {
+            if ( DataExport.actVess.terrainAltitude > 0.0 
+                 ||  DataExport.actVess.situation == Vessel.Situations.SPLASHED
+                 ||  DataExport.actVess.situation == Vessel.Situations.LANDED)
+            { 
+                return FlightGlobals.ship_altitude - DataExport.actVess.terrainAltitude;
+            }
+            return FlightGlobals.ship_altitude;
+        }
+        
+        private static Quaternion SurfaceRotation()
+        {
+            Vessel vessel = DataExport.actVess;
+            Vector3 centerOfMass = vessel.CoMD;
+            Vector3 up = (centerOfMass - vessel.mainBody.position).normalized;
+            Vector3 north = Vector3.ProjectOnPlane((vessel.mainBody.position + vessel.mainBody.transform.up * (float)vessel.mainBody.Radius) - centerOfMass, up).normalized;
+            return Quaternion.Inverse(Quaternion.Euler(90.0f, 0.0f, 0.0f) * Quaternion.Inverse(vessel.transform.rotation) * Quaternion.LookRotation(north, up));
+        }
+
+        public static double GetPitch()
+        {
+            Quaternion surfaceRotation = SurfaceRotation();
+            return surfaceRotation.eulerAngles.x > 180.0f ? 360.0f - surfaceRotation.eulerAngles.x : -surfaceRotation.eulerAngles.x;
+        }
+        
         public static double GetThrust()
         {
             double thrust = 0.0;
@@ -28,24 +55,12 @@ namespace KSPDataExport
             return thrust;
         }
         
-        /// <summary>
-        /// Gets the distance between a lat/lon pair and the vesel's launchsite
-        /// </summary>
-        /// <param name="lat">Latitude of the vessel</param>
-        /// <param name="lon">Longitude of the vessel</param>
-        /// <returns>Distance in meters between vessel and it's launchsite</returns>
-        internal static double Distance(double lat, double lon)
+        public static double DownrangeDistance()
         {
-            if (DataExport.actVess.mainBody.bodyDisplayName == DataExport.launchBody)
-            {
-                double distance = 600 * Math.Acos((Math.Sin(DataExport.launchLat) * Math.Sin(DegToRad(lat))) + Math.Cos(DataExport.launchLat) * Math.Cos(DegToRad(lat)) *
-                    Math.Cos(DegToRad(lon) - DataExport.launchLon));
-                return distance;
-            }
-            else
-            {
-                return 0;
-            }
+            if (DataExport.actVess.mainBody.bodyDisplayName != DataExport.launchBody) return 0;
+            // TODO: Don't use hardcoded radius
+            return 600 * Math.Acos((Math.Sin(DataExport.launchLat) * Math.Sin(DegToRad(DataExport.actVess.latitude))) + Math.Cos(DataExport.launchLat) * Math.Cos(DegToRad(DataExport.actVess.latitude)) *
+                Math.Cos(DegToRad(DataExport.actVess.longitude) - DataExport.launchLon));
         }
 
         /// <summary>
@@ -54,8 +69,7 @@ namespace KSPDataExport
         /// <returns>Radians</returns>
         public static double DegToRad(double deg)
         {
-            double radians = Math.PI / 180 * deg;
-            return radians;
+            return Math.PI / 180 * deg;
         }
 
         /// <summary>

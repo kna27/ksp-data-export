@@ -2,7 +2,7 @@
 defaultLogState=False
 
 // Vessel
-logVelocity=True
+logSrfSpeed=True
 logGForce=False
 logAcceleration=False
 logThrust=False
@@ -34,4 +34,4 @@ logVesselDV=False
 
 // Science
 logPressure=False
-logTemperature=False
+logExternTemp=False
