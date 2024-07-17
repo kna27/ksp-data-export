@@ -67,14 +67,15 @@ namespace KSPDataExport
             {
                 fileSize = "0.0 Bytes";
             }
+            
             loggableValues = new List<LoggableValue>
             {
                 // Vessel
                 new LoggableValue("Velocity", Category.Vessel, "logVelocity", () => Utilities.RoundToStr(actVess.srf_velocity.magnitude, 2)),
                 new LoggableValue("GForce", Category.Vessel, "logGForce", () => Utilities.RoundToStr(actVess.geeForce, 2)),
                 new LoggableValue("Acceleration", Category.Vessel, "logAcceleration", () => Utilities.RoundToStr(actVess.acceleration.magnitude, 2)),
-                new LoggableValue("Thrust", Category.Vessel, "logThrust", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationThrust(DeltaVSituationOptions.Altitude), 2)),
-                new LoggableValue("TWR", Category.Vessel, "logTWR", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationTWR(DeltaVSituationOptions.Altitude), 2)),
+                new LoggableValue("Thrust", Category.Vessel, "logThrust", () => Utilities.RoundToStr(Utilities.GetThrust(), 2)),
+                new LoggableValue("TWR", Category.Vessel, "logTWR", () => Utilities.RoundToStr(Utilities.GetThrust() / (actVess.GetTotalMass() * 10), 2)),
                 new LoggableValue("Mass", Category.Vessel, "logMass", () => Utilities.RoundToStr(actVess.GetTotalMass(), 2)),
                 new LoggableValue("Pitch", Category.Vessel, "logPitch", () => Utilities.RoundToStr(actVess.GetTransform().eulerAngles.x, 2)), // TODO: Implement
                 // Position

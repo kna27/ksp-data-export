@@ -11,6 +11,23 @@ namespace KSPDataExport
         {
             return Math.Round(value, decimals).ToString(CultureInfo.InvariantCulture);
         }
+
+        public static double GetThrust()
+        {
+            double thrust = 0.0;
+            foreach (var p in DataExport.actVess.parts)
+            {
+                foreach (PartModule module in p.Modules)
+                {
+                    if (!module.isEnabled) continue;
+                    var engine = module as ModuleEngines;
+                    if (engine != null)
+                        thrust += engine.finalThrust;
+                }
+            }
+            return thrust;
+        }
+        
         /// <summary>
         /// Gets the distance between a lat/lon pair and the vesel's launchsite
         /// </summary>
