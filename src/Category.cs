@@ -1,7 +1,7 @@
 namespace KSPDataExport
 {
     /// <summary>
-    /// The categories of loggable data points
+    ///     The categories of loggable data points
     /// </summary>
     public enum Category
     {

@@ -1,194 +1,208 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace KSPDataExport
 {
     /// <summary>
-    /// Writing data to the CSV file
+    ///     Writing data to the CSV file
     /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class DataExport : MonoBehaviour
     {
-        public static List<LoggableValue> loggableValues;
-        private static string appPath;
-        public static string CSVPath;
-        public static string dataPath;
-        public static string cfgPath;
-        public static string fileSize;
-        public static string CSVName;
-        private static string header;
-        
-        public static bool isLogging;
-        public static double waitTime = 1f;
-        private double lastLoggedTime;
+        public static List<LoggableValue> LoggableValues;
+        private static string _appPath;
+        public static string CsvPath;
+        public static string DataPath;
+        public static string CfgPath;
+        public static string FileSize;
+        public static string CsvName;
+        private static string _header;
 
-        public static Vessel actVess;
-        public static string launchBody;
-        public static double launchLat;
-        public static double launchLon;
-        FileInfo fi;
+        public static bool IsLogging;
+        public static double WaitTime = 1f;
+        private double _lastLoggedTime;
 
-        static double elapsedTime;
+        public static Vessel ActVess;
+        private static double _elapsedTime;
+        public static string LaunchBody;
+        public static double LaunchLat;
+        public static double LaunchLon;
+        private FileInfo _fi;
 
-        void Start()
+        private void Start()
         {
-            Debug.Log("[Data Export] Init");
-            dataPath = @"/GameData/DataExport/graphs/";
-            cfgPath = @"/GameData/DataExport/logged.vals";
+            Debug.Log("[Data Export] Initialized");
+            DataPath = @"/GameData/DataExport/graphs/";
+            CfgPath = @"/GameData/DataExport/logged.vals";
 
-            actVess = FlightGlobals.ActiveVessel;
-            launchBody = actVess.mainBody.bodyDisplayName;
-            launchLat = Utilities.DegToRad(actVess.latitude);
-            launchLon = Utilities.DegToRad(actVess.longitude);
+            ActVess = FlightGlobals.ActiveVessel;
+            LaunchBody = ActVess.mainBody.bodyDisplayName;
+            LaunchLat = Utilities.DegToRad(ActVess.latitude);
+            LaunchLon = Utilities.DegToRad(ActVess.longitude);
 
-            CSVName = actVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
-            CSVPath = @"/GameData/DataExport/graphs/" + CSVName;
-            appPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
-            dataPath = appPath + dataPath;
-            cfgPath = appPath + cfgPath;        
-            CSVPath = appPath + CSVPath;
-            if (!Directory.Exists(dataPath))
-            {
-                Directory.CreateDirectory(dataPath);
-            }
-            if (!File.Exists(CSVPath) && isLogging)
-            {
+            CsvName = ActVess.GetDisplayName() + "_" + DateTime.Now.ToString("MMddHHmm") + ".csv";
+            CsvPath = @"/GameData/DataExport/graphs/" + CsvName;
+            _appPath = Application.platform == RuntimePlatform.OSXPlayer
+                ? Directory.GetParent(Directory.GetParent(Application.dataPath)?.ToString() ?? string.Empty)?.ToString()
+                : Directory.GetParent(Application.dataPath)?.ToString();
+            DataPath = _appPath + DataPath;
+            CfgPath = _appPath + CfgPath;
+            CsvPath = _appPath + CsvPath;
+            if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
+            if (!File.Exists(CsvPath) && IsLogging)
                 InitFile();
-            }
             try
             {
-                fi = new FileInfo(CSVPath);
-                fileSize = Utilities.FormatSize(fi.Length);
+                _fi = new FileInfo(CsvPath);
+                FileSize = Utilities.FormatSize(_fi.Length);
             }
             catch
             {
-                fileSize = "0.0 Bytes";
+                FileSize = "0.0 Bytes";
             }
-            
-            loggableValues = new List<LoggableValue>
+
+            LoggableValues = new List<LoggableValue>
             {
                 // Vessel
-                new LoggableValue("Surface Speed", Category.Vessel, "logSrfSpeed", () => Utilities.RoundToStr(actVess.srf_velocity.magnitude, 2)),
-                new LoggableValue("GForce", Category.Vessel, "logGForce", () => Utilities.RoundToStr(actVess.geeForce, 2)),
-                new LoggableValue("Acceleration", Category.Vessel, "logAcceleration", () => Utilities.RoundToStr(actVess.acceleration.magnitude, 2)),
-                new LoggableValue("Thrust", Category.Vessel, "logThrust", () => Utilities.RoundToStr(Utilities.GetThrust(), 2)),
-                new LoggableValue("TWR", Category.Vessel, "logTWR", () => Utilities.RoundToStr(Utilities.GetThrust() / (actVess.GetTotalMass() * 10), 2)),
-                new LoggableValue("Mass", Category.Vessel, "logMass", () => Utilities.RoundToStr(actVess.GetTotalMass(), 2)),
-                new LoggableValue("Pitch", Category.Vessel, "logPitch", () => Utilities.RoundToStr(Utilities.GetPitch(), 2)),
+                new LoggableValue("Surface Speed", Category.Vessel, "logSrfSpeed",
+                    () => Utilities.RoundToStr(ActVess.srf_velocity.magnitude, 2)),
+                new LoggableValue("GForce", Category.Vessel, "logGForce",
+                    () => Utilities.RoundToStr(ActVess.geeForce, 2)),
+                new LoggableValue("Acceleration", Category.Vessel, "logAcceleration",
+                    () => Utilities.RoundToStr(ActVess.acceleration.magnitude, 2)),
+                new LoggableValue("Thrust", Category.Vessel, "logThrust",
+                    () => Utilities.RoundToStr(Utilities.GetThrust(), 2)),
+                new LoggableValue("TWR", Category.Vessel, "logTWR",
+                    () => Utilities.RoundToStr(Utilities.GetThrust() / (ActVess.GetTotalMass() * 10), 2)),
+                new LoggableValue("Mass", Category.Vessel, "logMass",
+                    () => Utilities.RoundToStr(ActVess.GetTotalMass(), 2)),
+                new LoggableValue("Pitch", Category.Vessel, "logPitch",
+                    () => Utilities.RoundToStr(Utilities.GetPitch(), 2)),
                 // Position
-                new LoggableValue("Altitude from Terrain", Category.Position, "logAltTer", () => Utilities.RoundToStr(Utilities.GetSrfAlt(), 2)),
-                new LoggableValue("Altitude from the Sea", Category.Position, "logAltSea", () => Utilities.RoundToStr(FlightGlobals.ship_altitude, 2)),
-                new LoggableValue("Downrange Distance", Category.Position, "logDownrangeDist", () => Utilities.RoundToStr(Utilities.DownrangeDistance(), 2)),
-                new LoggableValue("Latitude", Category.Position, "logLat", () => Utilities.RoundToStr(actVess.latitude, 5)),
-                new LoggableValue("Longitude", Category.Position, "logLon", () => Utilities.RoundToStr(actVess.longitude, 5)),
+                new LoggableValue("Altitude from Terrain", Category.Position, "logAltTer",
+                    () => Utilities.RoundToStr(Utilities.GetSrfAlt(), 2)),
+                new LoggableValue("Altitude from the Sea", Category.Position, "logAltSea",
+                    () => Utilities.RoundToStr(FlightGlobals.ship_altitude, 2)),
+                new LoggableValue("Downrange Distance", Category.Position, "logDownrangeDist",
+                    () => Utilities.RoundToStr(Utilities.DownrangeDistance(), 2)),
+                new LoggableValue("Latitude", Category.Position, "logLat",
+                    () => Utilities.RoundToStr(ActVess.latitude, 5)),
+                new LoggableValue("Longitude", Category.Position, "logLon",
+                    () => Utilities.RoundToStr(ActVess.longitude, 5)),
                 // Orbit
-                new LoggableValue("Apoapsis", Category.Orbit, "logAp", () => Utilities.RoundToStr(actVess.orbit.ApA, 2)),
-                new LoggableValue("Periapsis", Category.Orbit, "logPe", () => Utilities.RoundToStr(actVess.orbit.PeA, 2)),
-                new LoggableValue("Inclination", Category.Orbit, "logInc", () => Utilities.RoundToStr(actVess.orbit.inclination, 2)),
-                new LoggableValue("Orbital Velocity", Category.Orbit, "logOrbVel", () => Utilities.RoundToStr(actVess.obt_velocity.magnitude, 2)),
-                new LoggableValue("Gravity", Category.Orbit, "logGravity", () => Utilities.RoundToStr(actVess.graviticAcceleration.magnitude, 2)),
+                new LoggableValue("Apoapsis", Category.Orbit, "logAp",
+                    () => Utilities.RoundToStr(ActVess.orbit.ApA, 2)),
+                new LoggableValue("Periapsis", Category.Orbit, "logPe",
+                    () => Utilities.RoundToStr(ActVess.orbit.PeA, 2)),
+                new LoggableValue("Inclination", Category.Orbit, "logInc",
+                    () => Utilities.RoundToStr(ActVess.orbit.inclination, 2)),
+                new LoggableValue("Orbital Velocity", Category.Orbit, "logOrbVel",
+                    () => Utilities.RoundToStr(ActVess.obt_velocity.magnitude, 2)),
+                new LoggableValue("Gravity", Category.Orbit, "logGravity",
+                    () => Utilities.RoundToStr(ActVess.graviticAcceleration.magnitude, 2)),
                 // Target
-                new LoggableValue("Target Distance", Category.Target, "logTargDist", () => Utilities.RoundToStr(FlightGlobals.fetch.vesselTargetTransform is null ? 0 : Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position, actVess.transform.position), 2)),
-                new LoggableValue("Target Velocity", Category.Target, "logTargVel", () => Utilities.RoundToStr(FlightGlobals.fetch.vesselTargetTransform is null ? 0 : FlightGlobals.ship_tgtVelocity.magnitude, 2)),
+                new LoggableValue("Target Distance", Category.Target, "logTargDist",
+                    () => Utilities.RoundToStr(
+                        FlightGlobals.fetch.vesselTargetTransform is null
+                            ? 0
+                            : Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position,
+                                ActVess.transform.position), 2)),
+                new LoggableValue("Target Velocity", Category.Target, "logTargVel",
+                    () => Utilities.RoundToStr(
+                        FlightGlobals.fetch.vesselTargetTransform is null
+                            ? 0
+                            : FlightGlobals.ship_tgtVelocity.magnitude, 2)),
                 // Resources
-                new LoggableValue("Stage DeltaV", Category.Resources, "logStageDV", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetStage(actVess.currentStage).GetSituationDeltaV(DeltaVSituationOptions.Altitude), 0)),
-                new LoggableValue("Vessel DeltaV", Category.Resources, "logVesselDV", () => Utilities.RoundToStr(actVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude), 0)), // Uses built-in calculation which is a bit inaccurate, might fix
+                new LoggableValue("Stage DeltaV", Category.Resources, "logStageDV",
+                    () => Utilities.RoundToStr(
+                        ActVess.VesselDeltaV.GetStage(ActVess.currentStage)
+                            .GetSituationDeltaV(DeltaVSituationOptions.Altitude), 0)),
+                new LoggableValue("Vessel DeltaV", Category.Resources, "logVesselDV",
+                    () => Utilities.RoundToStr(
+                        ActVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude),
+                        0)), // Uses built-in calculation which is a bit inaccurate, might fix
                 // Science
-                new LoggableValue("Pressure", Category.Science, "logPressure", () => Utilities.RoundToStr(actVess.staticPressurekPa, 2)),
-                new LoggableValue("External Temperature", Category.Science, "logExternTemp", () => Utilities.RoundToStr(actVess.externalTemperature, 2))
+                new LoggableValue("Pressure", Category.Science, "logPressure",
+                    () => Utilities.RoundToStr(ActVess.staticPressurekPa, 2)),
+                new LoggableValue("External Temperature", Category.Science, "logExternTemp",
+                    () => Utilities.RoundToStr(ActVess.externalTemperature, 2))
             };
-            
-            header = loggableValues.Aggregate("Time,", (current, value) => current + (value.Name + ","));
+
+            _header = LoggableValues.Aggregate("Time,", (current, value) => current + value.Name + ",");
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
+            if (!IsLogging) return;
             // Create the CSV folder if it does not exist
-            if (!Directory.Exists(dataPath))
+            if (!Directory.Exists(DataPath))
             {
-                Directory.CreateDirectory(dataPath);
+                Debug.Log("[DataExport] Creating directory: " + DataPath);
+                Directory.CreateDirectory(DataPath);
             }
-            else if (isLogging)
-            {
-                try
-                {
-                    string[] arrLine = File.ReadAllLines(CSVPath);
-                    arrLine[0] = header;
-                    File.WriteAllLines(CSVPath, arrLine);
-                }
-                catch
-                {
-                    using (FileStream fs = File.Create(CSVPath)) { };
-                    using StreamWriter file = new StreamWriter(CSVPath, true);
-                    try
-                    {
-                        file.WriteLine(CSVPath, header);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log("[DataExport] Error writing headers: "  + e);
-                    }
-                }
-            }
-            // Create the CSV file if we are logging
-            if (!File.Exists(CSVPath) && isLogging)
-            {
-                File.Create(CSVPath);
-            }
-            if (isLogging)
-            {
-                if (Math.Round(actVess.missionTime, 2) >= lastLoggedTime + waitTime)
-                {
-                    // Setting the value of all variables
-                    elapsedTime = Math.Round(actVess.missionTime, 2);
-                    try
-                    {
-                        using StreamWriter file = new StreamWriter(CSVPath, true);
-                        try
-                        {
-                            string line = elapsedTime + ",";
-                            for (int i = 0; i < loggableValues.Count; i++)
-                            {
-                                line += loggableValues[i].Logging ? loggableValues[i].Value() + "," : ",";
-                            }
-                            file.WriteLine(line);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log("[DataExport] Was unable to log data to file: " + e);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log("[DataExport] Unable to create StreamWriter: " + e);
-                    }
-                    lastLoggedTime = Math.Round(actVess.missionTime, 2);
-                }
-                try
-                {
-                    fi = new FileInfo(CSVPath);
-                    fileSize = Utilities.FormatSize(fi.Length);
-                }
-                catch
-                {
-                    fileSize = "0.0 Bytes";
-                }
-            }
-        }
 
-        // Initializes the file and writes the headers
-        static void InitFile()
-        {
-            File.Create(CSVPath);
-            File.Delete(CSVPath);
-            using (FileStream fs = File.Create(CSVPath)) { };
-            using StreamWriter file = new StreamWriter(CSVPath, true);
+            // Create the CSV file if it does not exist
+            if (!File.Exists(CsvPath))
+            {
+                Debug.Log("[DataExport] Creating file: " + CsvPath);
+                InitFile();
+            }
+
+            // Write a line to the CSV file every WaitTime seconds
+            if (Math.Round(ActVess.missionTime, 2) >= _lastLoggedTime + WaitTime)
+            {
+                _elapsedTime = Math.Round(ActVess.missionTime, 2);
+                try
+                {
+                    using StreamWriter file = new StreamWriter(CsvPath, true);
+                    try
+                    {
+                        string line = _elapsedTime + ",";
+                        foreach (LoggableValue l in LoggableValues) line += l.Logging ? l.Value() + "," : ",";
+                        file.WriteLine(line);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("[DataExport] Unable to log data to file: " + e);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("[DataExport] Unable to create StreamWriter to log data to file: " + e);
+                }
+
+                _lastLoggedTime = Math.Round(ActVess.missionTime, 2);
+            }
+
             try
             {
-                file.WriteLine(CSVPath, header);
+                _fi.Refresh();
+                FileSize = Utilities.FormatSize(_fi.Length);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("[DataExport] Unable to get file size: " + e);
+                FileSize = "0.0 Bytes";
+            }
+        }
+
+        /// <summary>
+        ///     Initializes the CSV file with the header
+        /// </summary>
+        private void InitFile()
+        {
+            using (File.Create(CsvPath))
+            {
+            }
+
+            _fi = new FileInfo(CsvPath);
+            using StreamWriter file = new StreamWriter(CsvPath, true);
+            try
+            {
+                file.WriteLine(_header);
             }
             catch (Exception e)
             {

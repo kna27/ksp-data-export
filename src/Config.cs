@@ -5,12 +5,12 @@ using UnityEngine;
 namespace KSPDataExport
 {
     /// <summary>
-    /// Getting and setting values from a file
+    ///     Getting and setting values from a file
     /// </summary>
-    class Config
+    internal abstract class Config
     {
         /// <summary>
-        /// Gets a value from a file and optionally create it if it doesn't exist
+        ///     Gets a value from a file and optionally create it if it doesn't exist
         /// </summary>
         /// <param name="filePath">Path of the file</param>
         /// <param name="valueName">The name of the value you want to search for</param>
@@ -27,32 +27,28 @@ namespace KSPDataExport
                     //Split string on equals sign
                     string[] lineSides = line.Split('=');
                     if (lineSides[0] == valueName)
-                    {
                         //Return right side of split line
                         return bool.Parse(lineSides[1]);
-                    }
                 }
+
                 if (!createIfDoesNotExist)
                 {
                     Debug.Log("[DataExport] Value not found and will not be created: " + valueName);
                     throw new Exception("Value not found in file");
                 }
-                else
-                {
-                    // Create variable if it does not exist and set it to false
-                    try
-                    {
-                        using StreamWriter file = new StreamWriter(filePath, true);
-                        file.WriteLine(valueName + "=False");
-                        return false;
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log("[DataExport] Unable to read file in GetValue: " + e);
-                        throw new ApplicationException("[DataExport] Couldn't create variable in GetValue: ", e);
-                    }
-                }
 
+                // Create variable if it does not exist and set it to false
+                try
+                {
+                    using StreamWriter file = new StreamWriter(filePath, true);
+                    file.WriteLine(valueName + "=False");
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("[DataExport] Unable to read file in GetValue: " + e);
+                    throw new ApplicationException("[DataExport] Couldn't create variable in GetValue: ", e);
+                }
             }
             catch (Exception e)
             {
@@ -62,7 +58,7 @@ namespace KSPDataExport
         }
 
         /// <summary>
-        /// Sets a value from the filePath, given the valueName and the value to set it as
+        ///     Sets a value from the filePath, given the valueName and the value to set it as
         /// </summary>
         /// <param name="filePath">Path of the file</param>
         /// <param name="valueName">The name of the value you want to set</param>
@@ -72,7 +68,6 @@ namespace KSPDataExport
             string[] arrLine = File.ReadAllLines(filePath);
             bool done = false;
             for (int i = 0; i < arrLine.Length; i++)
-            {
                 // Skip line if it starts with a comment
                 if (!arrLine[i].StartsWith("//"))
                 {
@@ -81,18 +76,18 @@ namespace KSPDataExport
                     if (lineSides[0] == valueName)
                     {
                         // Set right side of line to the given value and write it to the file
-                        arrLine[i] = valueName + "=" + value.ToString();
+                        arrLine[i] = valueName + "=" + value;
                         File.WriteAllLines(filePath, arrLine);
                         done = true;
                     }
                 }
-            }
+
             // Creates the value if none was found in the file
             if (done) return;
             try
             {
                 using StreamWriter file = new StreamWriter(filePath, true);
-                file.WriteLine(valueName + "=" + value.ToString());
+                file.WriteLine(valueName + "=" + value);
             }
             catch (Exception e)
             {
