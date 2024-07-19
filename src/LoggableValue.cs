@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace KSPDataExport
 {
@@ -30,7 +31,18 @@ namespace KSPDataExport
             Name = name;
             Category = category;
             ConfigName = configName;
-            Value = value;
+            Value = () =>
+            {
+                try
+                {
+                    return value();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("[DataExport] Unable to get value for " + Name + ": " + e);
+                    return string.Empty;
+                }
+            };
             // Read the value from the config file on instantiation
             Logging = Config.GetValue(DataExport.CfgPath, ConfigName);
         }
