@@ -106,20 +106,21 @@ namespace KSPDataExport
                 // Target
                 new LoggableValue("Target Distance", Category.Target, "logTargDist",
                     () => Utilities.RoundToStr(
-                        FlightGlobals.fetch.vesselTargetTransform is null
+                        ActVess.targetObject is null
                             ? 0
-                            : Vector3.Distance(FlightGlobals.fetch.vesselTargetTransform.position,
+                            : Vector3.Distance(ActVess.targetObject.GetVessel().GetWorldPos3D(),
                                 ActVess.transform.position), 2)),
-                new LoggableValue("Target Velocity", Category.Target, "logTargVel",
+                new LoggableValue("Target Speed", Category.Target, "logTargVel",
                     () => Utilities.RoundToStr(
-                        FlightGlobals.fetch.vesselTargetTransform is null
+                        ActVess.targetObject is null
                             ? 0
-                            : FlightGlobals.ship_tgtVelocity.magnitude, 2)),
+                            : FlightGlobals.ship_tgtSpeed, 2)),
                 // Resources
                 new LoggableValue("Stage DeltaV", Category.Resources, "logStageDV",
                     () => Utilities.RoundToStr(
                         ActVess.VesselDeltaV.GetStage(ActVess.currentStage)
-                            .GetSituationDeltaV(DeltaVSituationOptions.Altitude), 0)),
+                            .GetSituationDeltaV(DeltaVSituationOptions.Altitude),
+                        0)), // Occasionally causes a null reference exception after staging
                 new LoggableValue("Vessel DeltaV", Category.Resources, "logVesselDV",
                     () => Utilities.RoundToStr(
                         ActVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude),
