@@ -134,7 +134,7 @@ namespace KSPDataExport
                     "Choose logged vals", _buttonStyle)) ShowLoggedVals = !ShowLoggedVals;
             // Opens folder containing .csv files
             if (GUI.Button(new Rect(_buttonRect.x, _buttonRect.y + 190, _buttonRect.width, _buttonRect.height),
-                    "View graphs", _buttonStyle))
+                    "View CSV files", _buttonStyle))
             {
                 Process.Start(DataExport.DataPath);
                 Application.OpenURL(DataExport.DataPath);

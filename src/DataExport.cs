@@ -52,7 +52,12 @@ namespace KSPDataExport
             CfgPath = _appPath + CfgPath;
             CsvPath = _appPath + CsvPath;
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
-            if (!File.Exists(CsvPath) && IsLogging)
+            if (File.Exists(CsvPath))
+            {
+                Debug.Log("[DataExport] Deleting file: " + CsvPath);
+                File.Delete(CsvPath);
+            }
+            if (IsLogging)
                 InitFile();
             try
             {
