@@ -1,28 +1,31 @@
-﻿using UnityEngine;
+﻿using System.IO;
 using KSP.UI.Screens;
-using System.IO;
+using UnityEngine;
 
 namespace KSPDataExport
 {
     using MonoBehavior = MonoBehaviour;
+
     /// <summary>
-    /// The toolbar launcher button
+    ///     The toolbar launcher button
     /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class AppLauncher : MonoBehavior
     {
-        private static string appIconPath = @"/GameData/DataExport/icon.png";
-        private static Texture2D appIcon;
+        private static string _appIconPath = @"/GameData/DataExport/icon.png";
+        private static Texture2D _appIcon;
 
-        private ApplicationLauncherButton launcher;
+        private ApplicationLauncherButton _launcher;
 
         public void Start()
         {
-            appIconPath = Application.platform == RuntimePlatform.OSXPlayer ? Directory.GetParent(Directory.GetParent(Application.dataPath).ToString()).ToString() : Directory.GetParent(Application.dataPath).ToString();
-            appIconPath += @"/GameData/DataExport/icon.png";
-            Debug.Log("[Data Export] Launcher Init");
-            appIcon ??= new Texture2D(32, 32);
-            appIcon.LoadImage(File.ReadAllBytes(appIconPath));
+            _appIconPath = Application.platform == RuntimePlatform.OSXPlayer
+                ? Directory.GetParent(Directory.GetParent(Application.dataPath)!.ToString())!.ToString()
+                : Directory.GetParent(Application.dataPath)!.ToString();
+            _appIconPath += @"/GameData/DataExport/icon.png";
+            Debug.Log("[Data Export] Launcher Initialized");
+            _appIcon ??= new Texture2D(32, 32);
+            _appIcon.LoadImage(File.ReadAllBytes(_appIconPath));
             GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveLauncher);
         }
@@ -36,39 +39,36 @@ namespace KSPDataExport
 
         public Vector3 GetAnchor()
         {
-            return launcher?.GetAnchor() ?? Vector3.right;
+            return _launcher?.GetAnchor() ?? Vector3.right;
         }
 
         private void AddLauncher()
         {
-            if (ApplicationLauncher.Ready && launcher == null)
-            {
-                launcher = ApplicationLauncher.Instance.AddModApplication(
+            if (ApplicationLauncher.Ready && _launcher == null)
+                _launcher = ApplicationLauncher.Instance.AddModApplication(
                     OnToggleOn, OnToggleOff,
                     null, null,
                     null, null,
-                    ApplicationLauncher.AppScenes.FLIGHT, appIcon
+                    ApplicationLauncher.AppScenes.FLIGHT, _appIcon
                 );
-            }
         }
 
         private void RemoveLauncher()
         {
-            if (launcher == null) return;
-            ApplicationLauncher.Instance.RemoveModApplication(launcher);
-            launcher = null;
+            if (_launcher == null) return;
+            ApplicationLauncher.Instance.RemoveModApplication(_launcher);
+            _launcher = null;
         }
 
         private static void OnToggleOn()
         {
-            Window.showGUI = true;
+            Window.ShowGUI = true;
         }
 
         private static void OnToggleOff()
         {
-            Window.showGUI = false;
-            Window.showLoggedVals = false;
+            Window.ShowGUI = false;
+            Window.ShowLoggedVals = false;
         }
     }
-
 }
