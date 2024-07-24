@@ -27,7 +27,7 @@ namespace KSPDataExport
 
         public static Vessel ActVess;
         private static double _elapsedTime;
-        public static string LaunchBody;
+        public static CelestialBody LaunchBody;
         public static double LaunchLat;
         public static double LaunchLon;
         private FileInfo _fi;
@@ -39,7 +39,7 @@ namespace KSPDataExport
             CfgPath = @"/GameData/DataExport/logged.vals";
 
             ActVess = FlightGlobals.ActiveVessel;
-            LaunchBody = ActVess.mainBody.bodyDisplayName;
+            LaunchBody = ActVess.mainBody;
             LaunchLat = Utilities.DegToRad(ActVess.latitude);
             LaunchLon = Utilities.DegToRad(ActVess.longitude);
 
@@ -57,6 +57,7 @@ namespace KSPDataExport
                 Debug.Log("[DataExport] Deleting file: " + CsvPath);
                 File.Delete(CsvPath);
             }
+
             if (IsLogging)
                 InitFile();
             try
@@ -72,68 +73,68 @@ namespace KSPDataExport
             LoggableValues = new List<LoggableValue>
             {
                 // Vessel
-                new LoggableValue("Surface Speed", Category.Vessel, "logSrfSpeed",
+                new LoggableValue("Surface Speed (m/s)", Category.Vessel, "logSrfSpeed",
                     () => Utilities.RoundToStr(ActVess.srf_velocity.magnitude, 2)),
-                new LoggableValue("GForce", Category.Vessel, "logGForce",
+                new LoggableValue("GForce (g)", Category.Vessel, "logGForce",
                     () => Utilities.RoundToStr(ActVess.geeForce, 2)),
-                new LoggableValue("Acceleration", Category.Vessel, "logAcceleration",
+                new LoggableValue("Acceleration (m/s^2)", Category.Vessel, "logAcceleration",
                     () => Utilities.RoundToStr(ActVess.acceleration.magnitude, 2)),
-                new LoggableValue("Thrust", Category.Vessel, "logThrust",
+                new LoggableValue("Thrust (kN)", Category.Vessel, "logThrust",
                     () => Utilities.RoundToStr(Utilities.GetThrust(), 2)),
                 new LoggableValue("TWR", Category.Vessel, "logTWR",
                     () => Utilities.RoundToStr(Utilities.GetThrust() / (ActVess.GetTotalMass() * 10), 2)),
-                new LoggableValue("Mass", Category.Vessel, "logMass",
+                new LoggableValue("Mass (t)", Category.Vessel, "logMass",
                     () => Utilities.RoundToStr(ActVess.GetTotalMass(), 2)),
-                new LoggableValue("Pitch", Category.Vessel, "logPitch",
+                new LoggableValue("Pitch (deg)", Category.Vessel, "logPitch",
                     () => Utilities.RoundToStr(Utilities.GetPitch(), 2)),
                 // Position
-                new LoggableValue("Altitude from Terrain", Category.Position, "logAltTer",
+                new LoggableValue("Altitude from Terrain (m)", Category.Position, "logAltTer",
                     () => Utilities.RoundToStr(Utilities.GetSrfAlt(), 2)),
-                new LoggableValue("Altitude from the Sea", Category.Position, "logAltSea",
+                new LoggableValue("Altitude from the Sea (m)", Category.Position, "logAltSea",
                     () => Utilities.RoundToStr(FlightGlobals.ship_altitude, 2)),
-                new LoggableValue("Downrange Distance", Category.Position, "logDownrangeDist",
+                new LoggableValue("Downrange Distance (m)", Category.Position, "logDownrangeDist",
                     () => Utilities.RoundToStr(Utilities.DownrangeDistance(), 2)),
-                new LoggableValue("Latitude", Category.Position, "logLat",
+                new LoggableValue("Latitude (deg)", Category.Position, "logLat",
                     () => Utilities.RoundToStr(ActVess.latitude, 5)),
-                new LoggableValue("Longitude", Category.Position, "logLon",
+                new LoggableValue("Longitude (deg)", Category.Position, "logLon",
                     () => Utilities.RoundToStr(ActVess.longitude, 5)),
                 // Orbit
-                new LoggableValue("Apoapsis", Category.Orbit, "logAp",
+                new LoggableValue("Apoapsis (m)", Category.Orbit, "logAp",
                     () => Utilities.RoundToStr(ActVess.orbit.ApA, 2)),
-                new LoggableValue("Periapsis", Category.Orbit, "logPe",
+                new LoggableValue("Periapsis (m)", Category.Orbit, "logPe",
                     () => Utilities.RoundToStr(ActVess.orbit.PeA, 2)),
-                new LoggableValue("Inclination", Category.Orbit, "logInc",
+                new LoggableValue("Inclination (deg)", Category.Orbit, "logInc",
                     () => Utilities.RoundToStr(ActVess.orbit.inclination, 2)),
-                new LoggableValue("Orbital Velocity", Category.Orbit, "logOrbVel",
+                new LoggableValue("Orbital Velocity (m/s)", Category.Orbit, "logOrbVel",
                     () => Utilities.RoundToStr(ActVess.obt_velocity.magnitude, 2)),
-                new LoggableValue("Gravity", Category.Orbit, "logGravity",
+                new LoggableValue("Gravity (m/s^2)", Category.Orbit, "logGravity",
                     () => Utilities.RoundToStr(ActVess.graviticAcceleration.magnitude, 2)),
                 // Target
-                new LoggableValue("Target Distance", Category.Target, "logTargDist",
+                new LoggableValue("Target Distance (m)", Category.Target, "logTargDist",
                     () => Utilities.RoundToStr(
                         ActVess.targetObject is null
                             ? 0
                             : Vector3.Distance(ActVess.targetObject.GetVessel().GetWorldPos3D(),
                                 ActVess.transform.position), 2)),
-                new LoggableValue("Target Speed", Category.Target, "logTargVel",
+                new LoggableValue("Target Speed (m/s)", Category.Target, "logTargVel",
                     () => Utilities.RoundToStr(
                         ActVess.targetObject is null
                             ? 0
                             : FlightGlobals.ship_tgtSpeed, 2)),
                 // Resources
-                new LoggableValue("Stage DeltaV", Category.Resources, "logStageDV",
+                new LoggableValue("Stage DeltaV (m/s)", Category.Resources, "logStageDV",
                     () => Utilities.RoundToStr(
                         ActVess.VesselDeltaV.GetStage(ActVess.currentStage)
                             .GetSituationDeltaV(DeltaVSituationOptions.Altitude),
                         0)), // Occasionally causes a null reference exception after staging
-                new LoggableValue("Vessel DeltaV", Category.Resources, "logVesselDV",
+                new LoggableValue("Vessel DeltaV (m/s)", Category.Resources, "logVesselDV",
                     () => Utilities.RoundToStr(
                         ActVess.VesselDeltaV.GetSituationTotalDeltaV(DeltaVSituationOptions.Altitude),
                         0)), // Uses built-in calculation which is a bit inaccurate, might fix
                 // Science
-                new LoggableValue("Pressure", Category.Science, "logPressure",
+                new LoggableValue("Pressure (kPa)", Category.Science, "logPressure",
                     () => Utilities.RoundToStr(ActVess.staticPressurekPa, 2)),
-                new LoggableValue("External Temperature", Category.Science, "logExternTemp",
+                new LoggableValue("External Temperature (K)", Category.Science, "logExternTemp",
                     () => Utilities.RoundToStr(ActVess.externalTemperature, 2))
             };
 

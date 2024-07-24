@@ -109,11 +109,11 @@ namespace KSPDataExport
         /// </summary>
         public static double DownrangeDistance()
         {
-            if (DataExport.ActVess.mainBody.bodyDisplayName != DataExport.LaunchBody) return 0;
-            // TODO: Don't use hardcoded radius
-            return 600 * Math.Acos(Math.Sin(DataExport.LaunchLat) * Math.Sin(DegToRad(DataExport.ActVess.latitude)) +
-                                   Math.Cos(DataExport.LaunchLat) * Math.Cos(DegToRad(DataExport.ActVess.latitude)) *
-                                   Math.Cos(DegToRad(DataExport.ActVess.longitude) - DataExport.LaunchLon));
+            if (!DataExport.ActVess.mainBody.Equals(DataExport.LaunchBody)) return 0;
+            return DataExport.LaunchBody.Radius * Math.Acos(
+                Math.Sin(DataExport.LaunchLat) * Math.Sin(DegToRad(DataExport.ActVess.latitude)) +
+                Math.Cos(DataExport.LaunchLat) * Math.Cos(DegToRad(DataExport.ActVess.latitude)) *
+                Math.Cos(DegToRad(DataExport.ActVess.longitude) - DataExport.LaunchLon));
         }
     }
 }
