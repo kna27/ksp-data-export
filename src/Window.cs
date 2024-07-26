@@ -15,6 +15,8 @@ namespace KSPDataExport
         public static bool ShowGUI;
         public static bool ShowLoggedVals;
         private bool _wasLoggingStoppedByInvalidRate;
+        public string onText;
+        public string logRate;
 
         private Rect _windowRect = new Rect(150, 100, 275, 300);
         private Rect _loggedValsRect = new Rect(150, 100, 225, 760);
@@ -25,13 +27,27 @@ namespace KSPDataExport
         private readonly Rect _headerMainRect = new Rect(87.5f, 110, 100, 22);
         private readonly Rect _inputRect = new Rect(112.5f, 140, 50, 20);
 
-        public string onText;
-        public string logRate;
+        private readonly GUIStyle _valStyle = new GUIStyle("box")
+        {
+            fontSize = 11,
+            alignment = TextAnchor.MiddleLeft
+        };
 
-        private GUIStyle _valStyle;
-        private GUIStyle _buttonStyle;
-        private GUIStyle _infoStyle;
-        private GUIStyle _closeStyle;
+        private readonly GUIStyle _buttonStyle = new GUIStyle("button")
+        {
+            fontSize = 16
+        };
+
+        private readonly GUIStyle _infoStyle = new GUIStyle("box")
+        {
+            fontSize = 11,
+            alignment = TextAnchor.MiddleLeft
+        };
+
+        private readonly GUIStyle _closeStyle = new GUIStyle("button")
+        {
+            alignment = TextAnchor.UpperLeft
+        };
 
         private void Start()
         {
@@ -44,25 +60,6 @@ namespace KSPDataExport
 
         private void OnGUI()
         {
-            _buttonStyle = new GUIStyle("button")
-            {
-                fontSize = 16
-            };
-            _infoStyle = new GUIStyle("box")
-            {
-                fontSize = 11,
-                alignment = TextAnchor.MiddleLeft
-            };
-            _closeStyle = new GUIStyle("button")
-            {
-                alignment = TextAnchor.UpperLeft
-            };
-            _valStyle = new GUIStyle("box")
-            {
-                fontSize = 11,
-                alignment = TextAnchor.MiddleLeft
-            };
-
             if (ShowGUI) _windowRect = GUI.Window(0, _windowRect, MakeWindow, "KSP Data Export");
             if (ShowLoggedVals) _loggedValsRect = GUI.Window(1, _loggedValsRect, MakeLoggedValsWindow, "Logged Values");
         }
