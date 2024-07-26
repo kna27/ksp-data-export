@@ -3,24 +3,30 @@ defaultLogState=False
 
 // Vessel
 logSrfSpeed=True
-logGForce=False
+logGForce=True
 logAcceleration=False
 logThrust=False
 logTWR=True
 logMass=False
-logPitch=False
+logPitch=True
+logHeading=False
+logRoll=False
+logAoA=False
+logMach=False
 
 // Position
 logAltTer=True
 logAltSea=False
-logDownrangeDist=True
+logDownrangeDist=False
 logLat=False
 logLon=False
 
 // Orbit
 logAp=True
-logPe=False
-logInc=False
+logPe=True
+logTimeToAp=False
+logTimeToPe=False
+logInc=True
 logOrbVel=True
 logGravity=False
 

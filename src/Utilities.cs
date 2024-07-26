@@ -87,6 +87,40 @@ namespace KSPDataExport
         }
 
         /// <summary>
+        ///     Returns the heading of the vessel
+        /// </summary>
+        public static double GetHeading()
+        {
+            Quaternion surfaceRotation = SurfaceRotation();
+            return surfaceRotation.eulerAngles.y;
+        }
+
+        /// <summary>
+        ///     Returns the roll of the vessel
+        /// </summary>
+        public static double GetRoll()
+        {
+            Quaternion surfaceRotation = SurfaceRotation();
+            return surfaceRotation.eulerAngles.z > 180.0f
+                ? 360.0f - surfaceRotation.eulerAngles.z
+                : -surfaceRotation.eulerAngles.z;
+        }
+
+        /// <summary>
+        ///     Returns the angle of attack of the vessel
+        /// </summary>
+        public static double GetAoA()
+        {
+            if (DataExport.ActVess.srf_velocity.magnitude < 0.05) return 0;
+            Vector3 srfProj = Vector3.ProjectOnPlane(DataExport.ActVess.srf_velocity.normalized,
+                DataExport.ActVess.ReferenceTransform.right);
+            double tempAoA = UtilMath.Rad2Deg * Math.Atan2(
+                Vector3.Dot(srfProj.normalized, DataExport.ActVess.ReferenceTransform.forward),
+                Vector3.Dot(srfProj.normalized, DataExport.ActVess.ReferenceTransform.up));
+            return double.IsNaN(tempAoA) ? 0 : tempAoA;
+        }
+
+        /// <summary>
         ///     Returns the thrust of the vessel
         /// </summary>
         public static double GetThrust()
