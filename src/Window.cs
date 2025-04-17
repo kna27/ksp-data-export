@@ -1,166 +1,408 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace KSPDataExport
 {
     /// <summary>
-    ///     The mod's GUI
+    ///     The mod's GUI using PopupDialog
     /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class Window : MonoBehaviour
     {
+        // --- State Variables ---
         public static bool ShowGUI;
-        public static bool ShowLoggedVals;
+        private static bool _showLoggedVals;
         private bool _wasLoggingStoppedByInvalidRate;
-        public string onText;
-        public string logRate;
+        private string _logRateInput;
 
-        private Rect _windowRect = new Rect(150, 100, 275, 300);
-        private Rect _loggedValsRect = new Rect(150, 100, 225, 760);
-        private Rect _buttonRect = new Rect(50, 25, 175, 25);
-        private Rect _infoRect = new Rect(12.5f, 60, 250, 20);
-        private Rect _valRect = new Rect(10, 30, 175, 20);
-        private Rect _headerRect = new Rect(62.5f, 30, 100, 20);
-        private readonly Rect _headerMainRect = new Rect(87.5f, 110, 100, 22);
-        private readonly Rect _inputRect = new Rect(112.5f, 140, 50, 20);
+        // --- PopupDialog References ---
+        private PopupDialog _mainDialog;
+        private PopupDialog _loggedValsDialog;
 
-        private readonly GUIStyle _valStyle = new GUIStyle("box")
-        {
-            fontSize = 11,
-            alignment = TextAnchor.MiddleLeft
-        };
-
-        private readonly GUIStyle _buttonStyle = new GUIStyle("button")
-        {
-            fontSize = 16
-        };
-
-        private readonly GUIStyle _infoStyle = new GUIStyle("box")
-        {
-            fontSize = 11,
-            alignment = TextAnchor.MiddleLeft
-        };
-
-        private readonly GUIStyle _closeStyle = new GUIStyle("button")
-        {
-            alignment = TextAnchor.UpperLeft
-        };
+        // --- Dialog GUI Element References (for dynamic updates) ---
+        private DialogGUIButton _onOffButton;
+        private DialogGUILabel _fileSizeLabel;
+        private readonly List<DialogGUIBase> _loggedValuesDialogContent = new List<DialogGUIBase>();
 
         private void Start()
         {
-            logRate = DataExport.WaitTime.ToString(CultureInfo.InvariantCulture);
+            _logRateInput = DataExport.WaitTime.ToString(CultureInfo.InvariantCulture);
             ShowGUI = false;
-            ShowLoggedVals = false;
+            _showLoggedVals = false;
             DataExport.IsLogging = Config.GetValue(DataExport.CfgPath, "defaultLogState");
-            onText = DataExport.IsLogging ? "Turn Off" : "Turn On";
+
+            BuildLoggedValuesDialogStructure();
         }
 
-        private void OnGUI()
+        private void OnDestroy()
         {
-            if (ShowGUI) _windowRect = GUI.Window(0, _windowRect, MakeWindow, "KSP Data Export");
-            if (ShowLoggedVals) _loggedValsRect = GUI.Window(1, _loggedValsRect, MakeLoggedValsWindow, "Logged Values");
+            DismissMainWindow();
+            DismissLoggedValuesWindow();
         }
 
-        /// <summary>
-        ///     Window for choosing which values to log
-        /// </summary>
-        private void MakeLoggedValsWindow(int windowID)
+        private void Update()
         {
-            // The close button
-            if (GUI.Button(new Rect(200, 20, 20, 20), "x", _closeStyle)) ShowLoggedVals = false;
-
-            int vertHeight = 0;
-            int baseValueY = (int)_valRect.y;
-
-            for (int i = 0; i < Enum.GetValues(typeof(Category)).Length; i++)
+            if (ShowGUI)
             {
-                var categoryValues = DataExport.LoggableValues.Where(v => v.Category == (Category)i).ToList();
-                if (categoryValues.Count == 0) continue;
-
-                GUI.Box(new Rect(_headerRect.x, _headerRect.y + vertHeight, _headerRect.width, _headerRect.height),
-                    Enum.GetName(typeof(Category), i));
-                vertHeight += 25;
-
-                foreach (LoggableValue value in categoryValues)
-                {
-                    GUI.Box(new Rect(_valRect.x, baseValueY + vertHeight, _valRect.width, _valRect.height), value.Name,
-                        _valStyle);
-                    value.Logging = GUI.Toggle(new Rect(200, 30 + vertHeight, 12.5f, 12.5f), value.Logging, "");
-                    vertHeight += 25;
-                }
-            }
-
-            _loggedValsRect.height = vertHeight + 50;
-            // Make the window draggable
-            GUI.DragWindow(new Rect(0, 0, 10000, 50000));
-        }
-
-        // The main window
-        private void MakeWindow(int windowID)
-        {
-            // Close button
-            if (GUI.Button(new Rect(250, 20, 20, 20), "x", _closeStyle)) ShowGUI = false;
-            // Turn on/off button
-            if (GUI.Button(_buttonRect, onText, _buttonStyle))
-            {
-                DataExport.IsLogging = !DataExport.IsLogging;
-                onText = DataExport.IsLogging ? "Turn Off" : "Turn On";
-            }
-
-            // Label for CSV name
-            if (GUI.Button(_infoRect, "CSV Name: " + DataExport.CsvName, _infoStyle))
-                try
-                {
-                    Process.Start(DataExport.CsvPath);
-                }
-                catch
-                {
-                    ScreenMessages.PostScreenMessage("File does not exist yet. Turn on logging to see file.");
-                }
-
-            // Label for file size
-            GUI.Box(new Rect(_infoRect.x, _infoRect.y + 25, _infoRect.width, _infoRect.height),
-                "File size: " + DataExport.FileSize, _infoStyle);
-            // Log Rate
-            GUI.Box(_headerMainRect, "Log Rate (s):");
-            logRate = GUI.TextField(_inputRect, logRate, 3);
-            if (GUI.Button(new Rect(_buttonRect.x, _buttonRect.y + 150, _buttonRect.width, _buttonRect.height),
-                    "Choose logged vals", _buttonStyle)) ShowLoggedVals = !ShowLoggedVals;
-            // Opens folder containing .csv files
-            if (GUI.Button(new Rect(_buttonRect.x, _buttonRect.y + 190, _buttonRect.width, _buttonRect.height),
-                    "View CSV files", _buttonStyle))
-            {
-                Process.Start(DataExport.DataPath);
-                Application.OpenURL(DataExport.DataPath);
-            }
-
-            // Opens link to GitHub repo
-            if (GUI.Button(new Rect(_buttonRect.x, _buttonRect.y + 230, _buttonRect.width, _buttonRect.height), "Help",
-                    _buttonStyle)) Application.OpenURL("https://github.com/kna27/ksp-data-export");
-            // Check whether log rate does not contain invalid characters, and stop logging if it does
-            if (!double.TryParse(logRate, out double d) || d < 0.01f)
-            {
-                onText = "Turn On";
-                ScreenMessages.PostScreenMessage("Not a valid value! Logging paused.");
-                _wasLoggingStoppedByInvalidRate = true;
-                DataExport.IsLogging = false;
+                ShowWindow();
             }
             else
             {
-                DataExport.WaitTime = d;
-                if (_wasLoggingStoppedByInvalidRate)
+                HideWindow();
+                if (_showLoggedVals)
                 {
-                    onText = "Turn Off";
+                    _showLoggedVals = false;
+                }
+            }
+
+            if (_showLoggedVals)
+            {
+                ShowLoggedValuesWindow();
+            }
+            else
+            {
+                HideLoggedValuesWindow();
+            }
+
+            HandleLogRateInput();
+        }
+
+        // --- Main Window Management ---
+
+        private void ShowWindow()
+        {
+            if (_mainDialog == null)
+            {
+                SpawnMainWindow();
+            }
+
+            if (_mainDialog != null && !_mainDialog.gameObject.activeSelf)
+            {
+                _mainDialog.gameObject.SetActive(true);
+            }
+        }
+
+        private void HideWindow()
+        {
+            if (_mainDialog != null && _mainDialog.gameObject.activeSelf)
+            {
+                _mainDialog.gameObject.SetActive(false);
+            }
+        }
+
+        private void SpawnMainWindow()
+        {
+            var dialogElements = new List<DialogGUIBase>();
+
+            _onOffButton = new DialogGUIButton(
+                () => DataExport.IsLogging ? "Turn Off" : "Turn On",
+                ToggleLogging,
+                250.0f, 30.0f, false
+            );
+            dialogElements.Add(_onOffButton);
+
+            var csvButton = new DialogGUIButton(
+                () => DataExport.CsvName,
+                TryOpenCsvFile,
+                250f, 30f, false);
+            dialogElements.Add(csvButton);
+
+            _fileSizeLabel = new DialogGUILabel(() => "File size: " + DataExport.FileSize, 250f);
+            dialogElements.Add(_fileSizeLabel);
+
+            dialogElements.Add(new DialogGUISpace(5));
+            dialogElements.Add(new DialogGUIHorizontalLayout(
+                TextAnchor.MiddleLeft,
+                new DialogGUILabel("Log Rate (s):", 100f),
+                new DialogGUITextInput(_logRateInput, false, 3, OnLogRateChanged, 50f, 30f)
+            ));
+            dialogElements.Add(new DialogGUISpace(5));
+
+            dialogElements.Add(new DialogGUIButton(
+                () => _showLoggedVals ? "Close logged values" : "Choose logged values",
+                ToggleLoggedValsWindow,
+                250.0f, 30.0f, false
+            ));
+
+            dialogElements.Add(new DialogGUIButton(
+                "View CSV files",
+                ViewCsvFolder,
+                250.0f, 30.0f, false
+            ));
+
+            dialogElements.Add(new DialogGUIButton(
+                "Help",
+                ShowHelp,
+                250.0f, 30.0f, false
+            ));
+
+            // Use default position and size
+            Rect windowRect = new Rect(0.65f, 0.5f, 275, 290);
+
+            _mainDialog = PopupDialog.SpawnPopupDialog(
+                new Vector2(0.65f, 0.5f),
+                new Vector2(0.65f, 0.5f),
+                new MultiOptionDialog(
+                    "KSPDataExportMain",
+                    "",
+                    "KSP Data Export",
+                    HighLogic.UISkin,
+                    windowRect,
+                    dialogElements.ToArray()
+                ),
+                true,
+                HighLogic.UISkin,
+                false
+            );
+
+            if (_mainDialog != null)
+            {
+                _mainDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () =>
+                {
+                    ShowGUI = false;
+                };
+                _mainDialog.gameObject.SetActive(false);
+            }
+        }
+
+        private void DismissMainWindow()
+        {
+            if (_mainDialog != null)
+            {
+                _mainDialog.Dismiss();
+                _mainDialog = null;
+            }
+        }
+
+        // --- Logged Values Window Management ---
+
+        private void ShowLoggedValuesWindow()
+        {
+            if (_loggedValsDialog == null)
+            {
+                SpawnLoggedValuesWindow();
+            }
+
+            if (_loggedValsDialog != null && !_loggedValsDialog.gameObject.activeSelf)
+            {
+                _loggedValsDialog.gameObject.SetActive(true);
+            }
+        }
+
+        private void HideLoggedValuesWindow()
+        {
+            if (_loggedValsDialog != null && _loggedValsDialog.gameObject.activeSelf)
+            {
+                _loggedValsDialog.gameObject.SetActive(false);
+            }
+        }
+
+
+        private void BuildLoggedValuesDialogStructure()
+        {
+            _loggedValuesDialogContent.Clear();
+
+            for (int i = 0; i < Enum.GetValues(typeof(Category)).Length; i++)
+            {
+                Category category = (Category)i;
+                var categoryValues = DataExport.LoggableValues.Where(v => v.Category == category).OrderBy(v => v.Name)
+                    .ToList();
+                if (categoryValues.Count == 0) continue;
+
+                // Category Header
+                DialogGUILabel header = new DialogGUILabel(Enum.GetName(typeof(Category), i), true);
+                _loggedValuesDialogContent.Add(header);
+                _loggedValuesDialogContent.Add(new DialogGUISpace(6));
+
+                // Toggles for values in this category
+                foreach (LoggableValue value in categoryValues)
+                {
+                    var toggle = new DialogGUIToggle(
+                        value.Logging,
+                        value.Name,
+                        (state) => { value.Logging = state; },
+                        190f
+                    );
+                    _loggedValuesDialogContent.Add(toggle);
+                }
+
+                _loggedValuesDialogContent.Add(new DialogGUISpace(10));
+            }
+        }
+
+        private void SpawnLoggedValuesWindow()
+        {
+            float windowWidth = 240;
+            float windowHeight = 600f;
+
+            var contentLayout = new DialogGUIVerticalLayout(
+                10,
+                0,
+                4,
+                new RectOffset(6, 6, 10, 10),
+                TextAnchor.MiddleLeft
+            );
+
+            foreach (var item in _loggedValuesDialogContent)
+            {
+                contentLayout.AddChild(item);
+            }
+
+            var scrollList = new DialogGUIScrollList(
+                new Vector2(windowWidth - 20, windowHeight - 60),
+                false,
+                true,
+                new DialogGUIVerticalLayout(
+                    0, 0, 0, new RectOffset(),
+                    TextAnchor.UpperCenter,
+                    new DialogGUIBase[]
+                    {
+                        new DialogGUIContentSizer(
+                            ContentSizeFitter.FitMode.Unconstrained,
+                            ContentSizeFitter.FitMode.PreferredSize,
+                            true),
+                        contentLayout
+                    }
+                )
+            );
+
+            _loggedValsDialog = PopupDialog.SpawnPopupDialog(
+                new Vector2(0.85f, 0.5f),
+                new Vector2(0.85f, 0.5f),
+                new MultiOptionDialog(
+                    "KSPDataExportLoggedVals",
+                    "",
+                    "Logged Values",
+                    HighLogic.UISkin,
+                    new Rect(0.85f, 0.5f, windowWidth, windowHeight),
+                    scrollList
+                ),
+                true,
+                HighLogic.UISkin,
+                false
+            );
+
+            if (_loggedValsDialog != null)
+            {
+                _loggedValsDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () =>
+                {
+                    _showLoggedVals = false;
+                };
+
+                _loggedValsDialog.gameObject.SetActive(false);
+            }
+        }
+
+        private void DismissLoggedValuesWindow()
+        {
+            if (_loggedValsDialog != null)
+            {
+                _loggedValsDialog.Dismiss();
+                _loggedValsDialog = null;
+            }
+        }
+
+        private void ToggleLogging()
+        {
+            DataExport.IsLogging = !DataExport.IsLogging;
+            _wasLoggingStoppedByInvalidRate = false;
+        }
+
+        private void TryOpenCsvFile()
+        {
+            try
+            {
+                if (System.IO.File.Exists(DataExport.CsvPath))
+                {
+                    Process.Start(DataExport.CsvPath);
+                }
+                else
+                {
+                    ScreenMessages.PostScreenMessage("File does not exist yet. Turn on logging to create file.", 3f,
+                        ScreenMessageStyle.UPPER_CENTER);
+                }
+            }
+            catch (Exception ex)
+            {
+                ScreenMessages.PostScreenMessage($"Error opening file: {ex.Message}", 5f,
+                    ScreenMessageStyle.UPPER_CENTER); }
+        }
+
+        private string OnLogRateChanged(string newRate)
+        {
+            _logRateInput = newRate;
+            return newRate;
+        }
+
+        private void HandleLogRateInput()
+        {
+            if (double.TryParse(_logRateInput, NumberStyles.Any, CultureInfo.InvariantCulture, out double d) &&
+                d >= 0.01)
+            {
+                // Input is valid
+                if (Math.Abs(DataExport.WaitTime - d) > 0.001)
+                {
+                    DataExport.WaitTime = d;
+                }
+
+                if (_wasLoggingStoppedByInvalidRate) // If it was stopped due to invalid rate, turn it back on
+                {
                     DataExport.IsLogging = true;
                     _wasLoggingStoppedByInvalidRate = false;
                 }
             }
+            else
+            {
+                // Input is invalid
+                if (DataExport.IsLogging) // Only act if it *was* logging
+                {
+                    ScreenMessages.PostScreenMessage("Invalid log rate! Logging paused.", 3f,
+                        ScreenMessageStyle.UPPER_CENTER);
+                    DataExport.IsLogging = false;
+                    _wasLoggingStoppedByInvalidRate = true;
+                    // Button text updates via Func
+                }
+                // If not logging, do nothing about invalid input until user tries to turn logging on
+            }
+        }
 
-            // Make window draggable
-            GUI.DragWindow(new Rect(0, 0, 10000, 50000));
+        private void ToggleLoggedValsWindow()
+        {
+            _showLoggedVals = !_showLoggedVals;
+        }
+
+        private void ViewCsvFolder()
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(DataExport.DataPath);
+                Process.Start(DataExport.DataPath);
+            }
+            catch (Exception ex)
+            {
+                ScreenMessages.PostScreenMessage($"Error opening folder: {ex.Message}", 5f,
+                    ScreenMessageStyle.UPPER_CENTER);
+            }
+        }
+
+        private void ShowHelp()
+        {
+            Application.OpenURL("https://github.com/kna27/ksp-data-export");
+        }
+
+        private class DialogCloseButton : MonoBehaviour
+        {
+            public Action OnDismiss { get; set; }
+
+            public void OnDestroy()
+            {
+                OnDismiss?.Invoke();
+            }
         }
     }
 }

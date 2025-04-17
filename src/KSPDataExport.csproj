@@ -79,6 +79,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>$(KSP)\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(KSP)\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Category.cs" />

@@ -65,10 +65,9 @@ namespace KSPDataExport
             Window.ShowGUI = true;
         }
 
-        private static void OnToggleOff()
+        public static void OnToggleOff()
         {
             Window.ShowGUI = false;
-            Window.ShowLoggedVals = false;
         }
     }
 }
