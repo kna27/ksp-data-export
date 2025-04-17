@@ -13,19 +13,29 @@ namespace KSPDataExport
     public class AppLauncher : MonoBehavior
     {
         private static string _appIconPath = @"/GameData/DataExport/icon.png";
+        private static string _activeIconPath = @"/GameData/DataExport/active.png";
         private static Texture2D _appIcon;
+        private static Texture2D _activeIcon;
 
         private ApplicationLauncherButton _launcher;
 
         public void Start()
         {
-            _appIconPath = Application.platform == RuntimePlatform.OSXPlayer
+            string basePath = Application.platform == RuntimePlatform.OSXPlayer
                 ? Directory.GetParent(Directory.GetParent(Application.dataPath)!.ToString())!.ToString()
                 : Directory.GetParent(Application.dataPath)!.ToString();
-            _appIconPath += @"/GameData/DataExport/icon.png";
+
+            _appIconPath = basePath + @"/GameData/DataExport/icon.png";
+            _activeIconPath = basePath + @"/GameData/DataExport/active.png";
+
             Debug.Log("[Data Export] Launcher Initialized");
+
             _appIcon ??= new Texture2D(32, 32);
+            _activeIcon ??= new Texture2D(32, 32);
+
             _appIcon.LoadImage(File.ReadAllBytes(_appIconPath));
+            _activeIcon.LoadImage(File.ReadAllBytes(_activeIconPath));
+
             GameEvents.onGUIApplicationLauncherReady.Add(AddLauncher);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(RemoveLauncher);
         }
@@ -49,8 +59,11 @@ namespace KSPDataExport
                     OnToggleOn, OnToggleOff,
                     null, null,
                     null, null,
-                    ApplicationLauncher.AppScenes.FLIGHT, _appIcon
+                    ApplicationLauncher.AppScenes.FLIGHT,
+                    DataExport.IsLogging ? _activeIcon : _appIcon
                 );
+
+            UpdateIconState();
         }
 
         private void RemoveLauncher()
@@ -65,9 +78,16 @@ namespace KSPDataExport
             Window.ShowGUI = true;
         }
 
-        public static void OnToggleOff()
+        private static void OnToggleOff()
         {
             Window.ShowGUI = false;
+        }
+        
+        public void UpdateIconState()
+        {
+            if (!_launcher) return;
+
+            _launcher.SetTexture(DataExport.IsLogging ? _activeIcon : _appIcon);
         }
     }
 }

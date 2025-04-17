@@ -162,10 +162,7 @@ namespace KSPDataExport
 
             if (_mainDialog != null)
             {
-                _mainDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () =>
-                {
-                    ShowGUI = false;
-                };
+                _mainDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () => { ShowGUI = false; };
                 _mainDialog.gameObject.SetActive(false);
             }
         }
@@ -311,6 +308,12 @@ namespace KSPDataExport
         {
             DataExport.IsLogging = !DataExport.IsLogging;
             _wasLoggingStoppedByInvalidRate = false;
+
+            AppLauncher launcher = FindObjectOfType<AppLauncher>();
+            if (launcher != null)
+            {
+                launcher.UpdateIconState();
+            }
         }
 
         private void TryOpenCsvFile()
@@ -330,7 +333,8 @@ namespace KSPDataExport
             catch (Exception ex)
             {
                 ScreenMessages.PostScreenMessage($"Error opening file: {ex.Message}", 5f,
-                    ScreenMessageStyle.UPPER_CENTER); }
+                    ScreenMessageStyle.UPPER_CENTER);
+            }
         }
 
         private string OnLogRateChanged(string newRate)
@@ -354,6 +358,13 @@ namespace KSPDataExport
                 {
                     DataExport.IsLogging = true;
                     _wasLoggingStoppedByInvalidRate = false;
+
+                    // Update icon
+                    AppLauncher launcher = FindObjectOfType<AppLauncher>();
+                    if (launcher != null)
+                    {
+                        launcher.UpdateIconState();
+                    }
                 }
             }
             else
@@ -365,7 +376,12 @@ namespace KSPDataExport
                         ScreenMessageStyle.UPPER_CENTER);
                     DataExport.IsLogging = false;
                     _wasLoggingStoppedByInvalidRate = true;
-                    // Button text updates via Func
+
+                    AppLauncher launcher = FindObjectOfType<AppLauncher>();
+                    if (launcher != null)
+                    {
+                        launcher.UpdateIconState();
+                    }
                 }
                 // If not logging, do nothing about invalid input until user tries to turn logging on
             }
