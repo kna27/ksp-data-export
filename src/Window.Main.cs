@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace KSPDataExport
 {
     /// <summary>
-    ///     The mod's GUI using PopupDialog
+    ///     The mod's main GUI
     /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    public class Window : MonoBehaviour
+    public partial class Window
     {
         // --- State Variables ---
         public static bool ShowGUI;
@@ -76,7 +74,7 @@ namespace KSPDataExport
 
         private void ShowWindow()
         {
-            if (_mainDialog == null)
+            if (!_mainDialog)
             {
                 SpawnMainWindow();
             }
@@ -89,7 +87,7 @@ namespace KSPDataExport
 
         private void HideWindow()
         {
-            if (_mainDialog != null && _mainDialog.gameObject.activeSelf)
+            if (_mainDialog && _mainDialog.gameObject.activeSelf)
             {
                 _mainDialog.gameObject.SetActive(false);
             }
@@ -160,148 +158,16 @@ namespace KSPDataExport
                 false
             );
 
-            if (_mainDialog != null)
-            {
-                _mainDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () => { ShowGUI = false; };
-                _mainDialog.gameObject.SetActive(false);
-            }
+            if (!_mainDialog) return;
+            _mainDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () => { ShowGUI = false; };
+            _mainDialog.gameObject.SetActive(false);
         }
 
         private void DismissMainWindow()
         {
-            if (_mainDialog != null)
-            {
-                _mainDialog.Dismiss();
-                _mainDialog = null;
-            }
-        }
-
-        // --- Logged Values Window Management ---
-
-        private void ShowLoggedValuesWindow()
-        {
-            if (_loggedValsDialog == null)
-            {
-                SpawnLoggedValuesWindow();
-            }
-
-            if (_loggedValsDialog != null && !_loggedValsDialog.gameObject.activeSelf)
-            {
-                _loggedValsDialog.gameObject.SetActive(true);
-            }
-        }
-
-        private void HideLoggedValuesWindow()
-        {
-            if (_loggedValsDialog != null && _loggedValsDialog.gameObject.activeSelf)
-            {
-                _loggedValsDialog.gameObject.SetActive(false);
-            }
-        }
-
-
-        private void BuildLoggedValuesDialogStructure()
-        {
-            _loggedValuesDialogContent.Clear();
-
-            for (int i = 0; i < Enum.GetValues(typeof(Category)).Length; i++)
-            {
-                Category category = (Category)i;
-                var categoryValues = DataExport.LoggableValues.Where(v => v.Category == category).OrderBy(v => v.Name)
-                    .ToList();
-                if (categoryValues.Count == 0) continue;
-
-                // Category Header
-                DialogGUILabel header = new DialogGUILabel(Enum.GetName(typeof(Category), i), true);
-                _loggedValuesDialogContent.Add(header);
-                _loggedValuesDialogContent.Add(new DialogGUISpace(6));
-
-                // Toggles for values in this category
-                foreach (LoggableValue value in categoryValues)
-                {
-                    var toggle = new DialogGUIToggle(
-                        value.Logging,
-                        value.Name,
-                        (state) => { value.Logging = state; },
-                        190f
-                    );
-                    _loggedValuesDialogContent.Add(toggle);
-                }
-
-                _loggedValuesDialogContent.Add(new DialogGUISpace(10));
-            }
-        }
-
-        private void SpawnLoggedValuesWindow()
-        {
-            float windowWidth = 240;
-            float windowHeight = 600f;
-
-            var contentLayout = new DialogGUIVerticalLayout(
-                10,
-                0,
-                4,
-                new RectOffset(6, 6, 10, 10),
-                TextAnchor.MiddleLeft
-            );
-
-            foreach (var item in _loggedValuesDialogContent)
-            {
-                contentLayout.AddChild(item);
-            }
-
-            var scrollList = new DialogGUIScrollList(
-                new Vector2(windowWidth - 20, windowHeight - 60),
-                false,
-                true,
-                new DialogGUIVerticalLayout(
-                    0, 0, 0, new RectOffset(),
-                    TextAnchor.UpperCenter,
-                    new DialogGUIBase[]
-                    {
-                        new DialogGUIContentSizer(
-                            ContentSizeFitter.FitMode.Unconstrained,
-                            ContentSizeFitter.FitMode.PreferredSize,
-                            true),
-                        contentLayout
-                    }
-                )
-            );
-
-            _loggedValsDialog = PopupDialog.SpawnPopupDialog(
-                new Vector2(0.85f, 0.5f),
-                new Vector2(0.85f, 0.5f),
-                new MultiOptionDialog(
-                    "KSPDataExportLoggedVals",
-                    "",
-                    "Logged Values",
-                    HighLogic.UISkin,
-                    new Rect(0.85f, 0.5f, windowWidth, windowHeight),
-                    scrollList
-                ),
-                true,
-                HighLogic.UISkin,
-                false
-            );
-
-            if (_loggedValsDialog != null)
-            {
-                _loggedValsDialog.gameObject.AddComponent<DialogCloseButton>().OnDismiss = () =>
-                {
-                    _showLoggedVals = false;
-                };
-
-                _loggedValsDialog.gameObject.SetActive(false);
-            }
-        }
-
-        private void DismissLoggedValuesWindow()
-        {
-            if (_loggedValsDialog != null)
-            {
-                _loggedValsDialog.Dismiss();
-                _loggedValsDialog = null;
-            }
+            if (_mainDialog == null) return;
+            _mainDialog.Dismiss();
+            _mainDialog = null;
         }
 
         private void ToggleLogging()
@@ -310,7 +176,7 @@ namespace KSPDataExport
             _wasLoggingStoppedByInvalidRate = false;
 
             AppLauncher launcher = FindObjectOfType<AppLauncher>();
-            if (launcher != null)
+            if (launcher)
             {
                 launcher.UpdateIconState();
             }
@@ -354,34 +220,30 @@ namespace KSPDataExport
                     DataExport.WaitTime = d;
                 }
 
-                if (_wasLoggingStoppedByInvalidRate) // If it was stopped due to invalid rate, turn it back on
-                {
-                    DataExport.IsLogging = true;
-                    _wasLoggingStoppedByInvalidRate = false;
+                if (!_wasLoggingStoppedByInvalidRate) return;
+                DataExport.IsLogging = true;
+                _wasLoggingStoppedByInvalidRate = false;
 
-                    // Update icon
-                    AppLauncher launcher = FindObjectOfType<AppLauncher>();
-                    if (launcher != null)
-                    {
-                        launcher.UpdateIconState();
-                    }
+                // Update icon
+                AppLauncher launcher = FindObjectOfType<AppLauncher>();
+                if (launcher)
+                {
+                    launcher.UpdateIconState();
                 }
             }
             else
             {
                 // Input is invalid
-                if (DataExport.IsLogging) // Only act if it *was* logging
-                {
-                    ScreenMessages.PostScreenMessage("Invalid log rate! Logging paused.", 3f,
-                        ScreenMessageStyle.UPPER_CENTER);
-                    DataExport.IsLogging = false;
-                    _wasLoggingStoppedByInvalidRate = true;
+                if (!DataExport.IsLogging) return; // Only act if it was logging
+                ScreenMessages.PostScreenMessage("Invalid log rate! Logging paused.", 3f,
+                    ScreenMessageStyle.UPPER_CENTER);
+                DataExport.IsLogging = false;
+                _wasLoggingStoppedByInvalidRate = true;
 
-                    AppLauncher launcher = FindObjectOfType<AppLauncher>();
-                    if (launcher != null)
-                    {
-                        launcher.UpdateIconState();
-                    }
+                AppLauncher launcher = FindObjectOfType<AppLauncher>();
+                if (launcher)
+                {
+                    launcher.UpdateIconState();
                 }
                 // If not logging, do nothing about invalid input until user tries to turn logging on
             }

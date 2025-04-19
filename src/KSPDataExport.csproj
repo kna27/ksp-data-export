@@ -90,7 +90,8 @@
     <Compile Include="DataExport.cs" />
     <Compile Include="LoggableValue.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="Window.cs" />
+    <Compile Include="Window.Main.cs" />
+    <Compile Include="Window.LoggedVals.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
