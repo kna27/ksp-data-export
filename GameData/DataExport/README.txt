@@ -4,7 +4,7 @@
  | . \ ___) |  __/  | |_| | (_| | || (_| | | |___ >  <| |_) | (_) | |  | |_ 
  |_|\_\____/|_|     |____/ \__,_|\__\__,_| |_____/_/\_\ .__/ \___/|_|   \__|
                                                       |_|                   
-Version: 0.6
+Version: 1.0
 __________________________________________________________________________________________
 
 
@@ -16,7 +16,7 @@ GitHub repo: https://github.com/kna27/ksp-data-export
 
 ABOUT
 
-This mod allows you to export your flight data to a CSV file. You are then able to later create charts, graphs, etc. through a software such as Excel or Google Sheets. You are able to choose which values you would like to log to the CSV, as well as how often data is logged.
+This mod allows you to export your flight data to a CSV file. You are then able to later create charts, graphs, etc. through software such as Excel or Google Sheets. You are able to choose which values you would like to log to the CSV, as well as how often data is logged.
 If you want to log every flight by default, open the logged.vals file and change defaultLogState to True.
 
 
